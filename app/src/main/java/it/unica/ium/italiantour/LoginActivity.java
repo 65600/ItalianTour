@@ -7,6 +7,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 
+//example change in one of the files
+
 public class LoginActivity extends AppCompatActivity {
 
     @Override
