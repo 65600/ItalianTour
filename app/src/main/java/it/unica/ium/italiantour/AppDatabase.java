@@ -15,6 +15,7 @@ import androidx.room.RoomDatabase;
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract LoginDao loginDao();
+    public abstract MarkerDao markerDao();
 
     private static volatile AppDatabase INSTANCE;
 

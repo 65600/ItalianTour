@@ -1,5 +1,7 @@
 package it.unica.ium.italiantour;
 
+import java.util.List;
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
@@ -15,6 +17,9 @@ public interface LoginDao extends Dao {
     void deleteAllUsers();
 
     @Query("SELECT * FROM login_user WHERE username = :username")
-    LiveData<LoginUser> loadCredentials(String username);
+    LiveData<LoginUser> getCredentials(String username);
+
+    @Query("SELECT * FROM login_user")
+    LiveData<List<LoginUser>> loadAllCredentials();
 
 }
