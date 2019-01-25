@@ -3,6 +3,8 @@ package it.unica.ium.italiantour;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
@@ -35,13 +37,13 @@ public class RegisterFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
-        Button continueButton = getActivity().findViewById(R.id.registerRegistratiButton);
-        EditText mail = getActivity().findViewById(R.id.registerEmailField);
-        EditText user = getActivity().findViewById(R.id.registerUsernameField);
-        EditText pass = getActivity().findViewById(R.id.registerPasswordField);
+        Button continueButton = view.findViewById(R.id.registerRegistratiButton);
+        EditText mail = view.findViewById(R.id.registerEmailField);
+        EditText user = view.findViewById(R.id.registerUsernameField);
+        EditText pass = view.findViewById(R.id.registerPasswordField);
 
         continueButton.setOnClickListener(v -> {
             //todo: registration checks

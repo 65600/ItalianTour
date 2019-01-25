@@ -34,13 +34,13 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
-        EditText username = getActivity().findViewById(R.id.loginUsernameField);
-        EditText password = getActivity().findViewById(R.id.loginPasswordField);
-        Button login = getActivity().findViewById(R.id.loginAccediButton);
-        Button register = getActivity().findViewById(R.id.loginRegistratiButton);
+        EditText username = view.findViewById(R.id.loginUsernameField);
+        EditText password = view.findViewById(R.id.loginPasswordField);
+        Button login = view.findViewById(R.id.loginAccediButton);
+        Button register = view.findViewById(R.id.loginRegistratiButton);
 
 
         login.setOnClickListener(v -> {
