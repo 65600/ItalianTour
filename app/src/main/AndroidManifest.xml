@@ -32,7 +32,8 @@
         <activity
             android:name=".MainMapActivity"
             android:label="@string/title_activity_main_map"></activity>
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity"
+            android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
