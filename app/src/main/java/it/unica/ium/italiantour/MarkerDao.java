@@ -8,7 +8,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 @Dao
-public interface MarkerDao extends Dao {
+public interface MarkerDao{
 
     @Insert
     void insert(InterestMarker marker);

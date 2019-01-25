@@ -18,26 +18,31 @@ public class InterestMarker {
     //todo: add enum for marker type
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
-
-    public InterestMarker(@NonNull String name, String orari, String desc, LatLng coords) {
-        this.name = name;
-        this.orari = orari;
-        this.desc = desc;
-        this.coords = coords;
-    }
+    private Integer id;
 
     @NonNull
     private String name;
+
+    private String creator;
 
     private String orari;
 
     private String desc;
 
-    private LatLng coords;
+    private Double lat;
+    private Double lon;
 
+    public InterestMarker(Integer id, @NonNull String name, String creator, String orari, String desc, Double lat, Double lon) {
+        this.id = id;
+        this.name = name;
+        this.creator = creator;
+        this.orari = orari;
+        this.desc = desc;
+        this.lat = lat;
+        this.lon = lon;
+    }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -45,6 +50,8 @@ public class InterestMarker {
     public String getName() {
         return name;
     }
+
+    public String getCreator() { return creator; }
 
     public String getOrari() {
         return orari;
@@ -54,7 +61,11 @@ public class InterestMarker {
         return desc;
     }
 
-    public LatLng getCoords() {
-        return coords;
+    public Double getLat() {
+        return lat;
+    }
+
+    public Double getLon() {
+        return lon;
     }
 }

@@ -20,6 +20,11 @@ public class LoginViewModel extends AndroidViewModel {
 
     LiveData<List<LoginUser>> getAllCreds() { return mAllCreds; }
 
-    public void insert(LoginUser newUser) { appRepo.insertUser(newUser); }
+    public boolean validateCredentials(String username, String password){
+        LoginUser creds = new LoginUser(username, password, "");
+        return appRepo.validateCredentials(creds);
+    }
+
+    public void insertUser(LoginUser newUser) { appRepo.insertUser(newUser); }
 
 }

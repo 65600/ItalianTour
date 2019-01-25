@@ -4,12 +4,14 @@ package it.unica.ium.italiantour;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 
 /**
@@ -19,11 +21,11 @@ import android.widget.Button;
  */
 public class RegisterFragment extends Fragment {
 
+    private LoginViewModel mViewModel;
+
     public static RegisterFragment newInstance(String param1, String param2) {
         return new RegisterFragment();
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,10 +37,17 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
         Button continueButton = getActivity().findViewById(R.id.registerRegistratiButton);
+        EditText mail = getActivity().findViewById(R.id.registerEmailField);
+        EditText user = getActivity().findViewById(R.id.registerUsernameField);
+        EditText pass = getActivity().findViewById(R.id.registerPasswordField);
 
         continueButton.setOnClickListener(v -> {
             //todo: registration checks
+            LoginUser newUser = new LoginUser(user.getText().toString(), pass.getText().toString(), mail.getText().toString());
+            mViewModel.insertUser(newUser);
+            //todo: Visible message about insertion.
             Navigation.findNavController(v).navigate(R.id.action_registerFragment_pop);
         });
     }

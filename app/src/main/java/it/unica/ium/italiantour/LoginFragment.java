@@ -13,6 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+
+import java.util.List;
 
 public class LoginFragment extends Fragment {
 
@@ -34,14 +37,19 @@ public class LoginFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
-        // TODO: Use the ViewModel
+        EditText username = getActivity().findViewById(R.id.loginUsernameField);
+        EditText password = getActivity().findViewById(R.id.loginPasswordField);
         Button login = getActivity().findViewById(R.id.loginAccediButton);
         Button register = getActivity().findViewById(R.id.loginRegistratiButton);
 
 
         login.setOnClickListener(v -> {
-            //todo: actual login check
-            Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainMapActivity);
+            //todo: logging in message?
+            if(mViewModel.validateCredentials(username.getText().toString(), password.getText().toString())){
+                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainMapActivity);
+            }else{
+                //todo: error message
+            }
         });
 
         register.setOnClickListener(v -> {

@@ -1,7 +1,6 @@
 package it.unica.ium.italiantour;
 
 import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -14,25 +13,32 @@ public class LoginUser {
 
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = "username")
-    private String mUsername;
+    private String username;
 
     @NonNull
-    @ColumnInfo(name = "password")
-    private String mPassword;
+    private String password;
+
+    @NonNull
+    private String email;
 
     //Constructor
-    public LoginUser(String u, String p){
-        this.mUsername = u;
-        this.mPassword = p;
+    public LoginUser(String username, String password, String email){
+        this.username = username;
+        this.password = password;
+        this.email = email;
     }
 
-    //Get statement
+    //Get statements
+
     public String getUsername(){
-        return mUsername;
+        return username;
     }
 
     public String getPassword(){
-        return mPassword;
+        return password;
+    }
+
+    public String getEmail(){
+        return email;
     }
 }

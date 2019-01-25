@@ -8,7 +8,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 @Dao
-public interface LoginDao extends Dao {
+public interface LoginDao{
 
     @Insert
     void insert(LoginUser lu);
@@ -17,7 +17,7 @@ public interface LoginDao extends Dao {
     void deleteAllUsers();
 
     @Query("SELECT * FROM login_user WHERE username = :username")
-    LiveData<LoginUser> getCredentials(String username);
+    LoginUser getCredentials(String username);
 
     @Query("SELECT * FROM login_user")
     LiveData<List<LoginUser>> loadAllCredentials();

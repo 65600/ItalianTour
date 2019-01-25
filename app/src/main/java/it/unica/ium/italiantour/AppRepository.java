@@ -2,6 +2,8 @@ package it.unica.ium.italiantour;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.util.Log;
+
 import java.util.List;
 import androidx.lifecycle.LiveData;
 
@@ -12,61 +14,88 @@ import androidx.lifecycle.LiveData;
 
 public class AppRepository {
 
-        private LoginDao mLogindDao;
-        private MarkerDao mMarkerDao;
-        private LiveData<List<LoginUser>> mAllCreds;
-        private LiveData<List<InterestMarker>> mAllMarkers;
+    private LoginDao mLogindDao;
+    private MarkerDao mMarkerDao;
+    private LiveData<List<LoginUser>> mAllCreds;
+    private LiveData<List<InterestMarker>> mAllMarkers;
 
-        AppRepository(Application application) {
-            AppDatabase db = AppDatabase.getDatabase(application);
-            mLogindDao = db.loginDao();
-            mMarkerDao = db.markerDao();
-            mAllCreds = mLogindDao.loadAllCredentials();
-            mAllMarkers = mMarkerDao.getAllMarkers();
-        }
+    AppRepository(Application application) {
+        AppDatabase db = AppDatabase.getDatabase(application);
+        mLogindDao = db.loginDao();
+        mMarkerDao = db.markerDao();
+        mAllCreds = mLogindDao.loadAllCredentials();
+        mAllMarkers = mMarkerDao.getAllMarkers();
+    }
 
-        LiveData<List<LoginUser>> getAllCreds() {
-            return mAllCreds;
-        }
+    LiveData<List<LoginUser>> getAllCreds() {
+        return mAllCreds;
+    }
 
-        LiveData<List<InterestMarker>> getAllMarkers() {
-            return mAllMarkers;
-        }
-
-        public void insertMarker (InterestMarker marker){
-            new insertMarkerAsyncTask(mMarkerDao).execute(marker);
-        }
+    LiveData<List<InterestMarker>> getAllMarkers() {
+        return mAllMarkers;
+    }
 
 
-        public void insertUser (LoginUser loginUser) {
-            new insertUserAsyncTask(mLogindDao).execute(loginUser);
-        }
+    public void insertUser (LoginUser loginUser) {
+        new insertUserAsyncTask(mLogindDao).execute(loginUser);
+    }
 
-        private static class insertUserAsyncTask extends AsyncTask<LoginUser, Void, Void> {
-            private LoginDao mAsyncTaskDao;
-
-            insertUserAsyncTask(LoginDao dao) {
-                mAsyncTaskDao = dao;
+    public boolean validateCredentials(LoginUser creds){
+            AsyncTask task = new validateUserAsyncTask(mLogindDao).execute(creds);
+            try{
+                return (Boolean)task.get();
+            }catch(Exception e){
+                Log.e(this.toString(), e.toString());
+                return false;
             }
+    }
 
-            @Override
-            protected Void doInBackground(final LoginUser... params) {
-                mAsyncTaskDao.insert(params[0]);
-                return null;
-            }
+    public void insertMarker (InterestMarker marker){
+        new insertMarkerAsyncTask(mMarkerDao).execute(marker);
+    }
+
+    private static class insertUserAsyncTask extends AsyncTask<LoginUser, Void, Void> {
+        private LoginDao mAsyncTaskDao;
+
+        insertUserAsyncTask(LoginDao dao) {
+            mAsyncTaskDao = dao;
         }
 
-        private static class insertMarkerAsyncTask extends AsyncTask<InterestMarker, Void, Void>{
-            private MarkerDao mAsyncTaskDao;
-
-            insertMarkerAsyncTask(MarkerDao dao){
-                mAsyncTaskDao = dao;
-            }
-
-            @Override
-            protected Void doInBackground(final InterestMarker... params) {
-                mAsyncTaskDao.insert(params[0]);
-                return null;
-            }
+        @Override
+        protected Void doInBackground(final LoginUser... params) {
+            mAsyncTaskDao.insert(params[0]);
+            return null;
         }
+    }
+
+    private static class validateUserAsyncTask extends AsyncTask<LoginUser, Void, Boolean> {
+        private LoginDao mAsyncTaskDao;
+
+        validateUserAsyncTask(LoginDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Boolean doInBackground(final LoginUser... params) {
+            LoginUser u = params[0];
+            String username = u.getUsername();
+            String password = u.getPassword();
+            LoginUser registered = mAsyncTaskDao.getCredentials(username);
+            return registered != null && registered.getPassword() != null &&  registered.getPassword().equals(password);
+        }
+    }
+
+    private static class insertMarkerAsyncTask extends AsyncTask<InterestMarker, Void, Void>{
+        private MarkerDao mAsyncTaskDao;
+
+        insertMarkerAsyncTask(MarkerDao dao){
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final InterestMarker... params) {
+            mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
 }
