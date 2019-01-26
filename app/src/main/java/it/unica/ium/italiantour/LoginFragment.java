@@ -1,5 +1,6 @@
 package it.unica.ium.italiantour;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
@@ -9,17 +10,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.util.List;
-
 public class LoginFragment extends Fragment {
 
-    private LoginViewModel mViewModel;
+    private LoginViewModel loginViewModel;
+    private MainViewModel mainViewModel;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -36,7 +37,9 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
+        loginViewModel = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
+        mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        Log.i(this.toString(), mainViewModel.toString());
         EditText username = view.findViewById(R.id.loginUsernameField);
         EditText password = view.findViewById(R.id.loginPasswordField);
         Button login = view.findViewById(R.id.loginAccediButton);
@@ -45,8 +48,12 @@ public class LoginFragment extends Fragment {
 
         login.setOnClickListener(v -> {
             //todo: logging in message?
-            if(mViewModel.validateCredentials(username.getText().toString(), password.getText().toString())){
-                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainMapActivity);
+            LoginUser res = loginViewModel.validateCredentials(username.getText().toString(), password.getText().toString());
+            if(res != null){
+                mainViewModel.setUser(res);
+                Toolbar toolbar = getActivity().findViewById(R.id.mainToolbar);
+                toolbar.setVisibility(View.VISIBLE);
+                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mapFragment);
             }else{
                 //todo: error message
             }

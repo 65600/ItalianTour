@@ -11,7 +11,7 @@ import androidx.room.RoomDatabase;
  * Contains tables login_user and marker.
  */
 
-@Database(entities = {LoginUser.class, InterestMarker.class}, version = 1)
+@Database(entities = {LoginUser.class, InterestMarker.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract LoginDao loginDao();

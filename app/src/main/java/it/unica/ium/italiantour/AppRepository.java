@@ -40,13 +40,13 @@ public class AppRepository {
         new insertUserAsyncTask(mLogindDao).execute(loginUser);
     }
 
-    public boolean validateCredentials(LoginUser creds){
+    public LoginUser validateCredentials(LoginUser creds){
             AsyncTask task = new validateUserAsyncTask(mLogindDao).execute(creds);
             try{
-                return (Boolean)task.get();
+                return (LoginUser)task.get();
             }catch(Exception e){
                 Log.e(this.toString(), e.toString());
-                return false;
+                return null;
             }
     }
 
@@ -68,7 +68,7 @@ public class AppRepository {
         }
     }
 
-    private static class validateUserAsyncTask extends AsyncTask<LoginUser, Void, Boolean> {
+    private static class validateUserAsyncTask extends AsyncTask<LoginUser, Void, LoginUser> {
         private LoginDao mAsyncTaskDao;
 
         validateUserAsyncTask(LoginDao dao) {
@@ -76,12 +76,16 @@ public class AppRepository {
         }
 
         @Override
-        protected Boolean doInBackground(final LoginUser... params) {
+        protected LoginUser doInBackground(final LoginUser... params) {
             LoginUser u = params[0];
             String username = u.getUsername();
             String password = u.getPassword();
             LoginUser registered = mAsyncTaskDao.getCredentials(username);
-            return registered != null && registered.getPassword() != null &&  registered.getPassword().equals(password);
+            if(registered != null && registered.getPassword() != null &&  registered.getPassword().equals(password)){
+                return registered;
+            }else{
+                return null;
+            }
         }
     }
 

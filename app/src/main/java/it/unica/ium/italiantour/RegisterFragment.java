@@ -39,7 +39,7 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
+        mViewModel = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
         Button continueButton = view.findViewById(R.id.registerRegistratiButton);
         EditText mail = view.findViewById(R.id.registerEmailField);
         EditText user = view.findViewById(R.id.registerUsernameField);

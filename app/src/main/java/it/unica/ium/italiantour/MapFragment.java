@@ -8,7 +8,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
@@ -37,17 +45,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         FragmentManager fm = getChildFragmentManager();
         final SupportMapFragment mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
+
         mapFragment.getMapAsync(this);
 
         return res;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-
-    }
 
     /**
      * Manipulates the map once available.
