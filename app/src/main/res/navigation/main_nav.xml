@@ -13,6 +13,13 @@
             app:destination="@id/loginFragment"
             app:popUpTo="@+id/mapFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_mapFragment_to_favouriteFragment"
+            app:destination="@id/favouriteFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -46,4 +53,9 @@
             app:popUpTo="@id/registerFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/favouriteFragment"
+        android:name="it.unica.ium.italiantour.FavouriteFragment"
+        android:label="Preferiti"
+        tools:layout="@layout/fragment_favourite_list" />
 </navigation>

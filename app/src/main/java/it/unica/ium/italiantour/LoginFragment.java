@@ -17,6 +17,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+
 public class LoginFragment extends Fragment {
 
     private LoginViewModel loginViewModel;
@@ -40,6 +43,7 @@ public class LoginFragment extends Fragment {
         loginViewModel = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
         mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
         Log.i(this.toString(), mainViewModel.toString());
+        View layout = view.findViewById(R.id.loginPanelLayout);
         EditText username = view.findViewById(R.id.loginUsernameField);
         EditText password = view.findViewById(R.id.loginPasswordField);
         Button login = view.findViewById(R.id.loginAccediButton);
@@ -47,15 +51,21 @@ public class LoginFragment extends Fragment {
 
 
         login.setOnClickListener(v -> {
-            //todo: logging in message?
+            Snackbar sb = Snackbar.make(layout, "Accesso in corso...", Snackbar.LENGTH_SHORT);
+            sb.show();
             LoginUser res = loginViewModel.validateCredentials(username.getText().toString(), password.getText().toString());
+            sb.dismiss();
             if(res != null){
                 mainViewModel.setUser(res);
-                Toolbar toolbar = getActivity().findViewById(R.id.mainToolbar);
+                Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+                NavigationView nv = getActivity().findViewById(R.id.nav_view);
                 toolbar.setVisibility(View.VISIBLE);
+                nv.setVisibility(View.VISIBLE);
                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mapFragment);
             }else{
-                //todo: error message
+                Snackbar.make(layout, "Errore di accesso. Verificare nome utente e password.", Snackbar.LENGTH_LONG).show();
+                username.setError("Verificare nome utente");
+                password.setError("Verificare password");
             }
         });
 

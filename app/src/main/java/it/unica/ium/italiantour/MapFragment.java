@@ -20,12 +20,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.snackbar.Snackbar;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private MainViewModel mViewModel;
     private GoogleMap mMap;
+    private View layout;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -47,7 +50,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         final SupportMapFragment mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
 
         mapFragment.getMapAsync(this);
-
         return res;
     }
 
@@ -65,10 +67,43 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        /*
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        */
+
+        //Example of our own marker structure and parsing with observer.
+        InterestMarker testMarker = new InterestMarker("Cagliari", mViewModel.getUser().getUsername(),
+                "0:00 - 23:59","Marker di prova per la mappa", 39.216667, 9.116667);
+        if(mViewModel.getAllMarkers().getValue() == null ||  mViewModel.getAllMarkers().getValue().size() == 0){
+            mViewModel.insertMarker(testMarker);
+        }
+
+        //Every time the list of markers changes (eg. we added or deleted one), redraw them on the map. Uses LiveData.observe().
+        mViewModel.getAllMarkers().observe(this, list ->{
+            mMap.clear();
+            for( InterestMarker m : list){
+                LatLng m_coords = new LatLng(m.getLat(), m.getLon());
+                Marker marker = mMap.addMarker(new MarkerOptions().position(m_coords).title(m.getName()));
+                marker.setTag(m);
+            }
+        });
+
+        // Every time we click on a marker, we select it, and load its data into the details tab.
+        mMap.setOnMarkerClickListener(m -> {
+            InterestMarker data = (InterestMarker) m.getTag();
+            mViewModel.setSelectedMarker(data.id);
+            mViewModel.getSelectedMarker().observe( this, val -> {
+                //todo: This will execute once it's finished loading. Start details panel here.
+                Log.d("map", "DEBUG, marker selected: " + val.getName());
+            });
+            return false;
+        });
+
+
+
     }
 
 }

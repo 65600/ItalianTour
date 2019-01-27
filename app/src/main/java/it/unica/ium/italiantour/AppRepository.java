@@ -40,6 +40,11 @@ public class AppRepository {
         new insertUserAsyncTask(mLogindDao).execute(loginUser);
     }
 
+    public void insertFavourite (Favourite favourite) {
+        new insertFavouriteAsyncTask(mMarkerDao).execute(favourite);
+    }
+
+
     public LoginUser validateCredentials(LoginUser creds){
             AsyncTask task = new validateUserAsyncTask(mLogindDao).execute(creds);
             try{
@@ -53,6 +58,40 @@ public class AppRepository {
     public void insertMarker (InterestMarker marker){
         new insertMarkerAsyncTask(mMarkerDao).execute(marker);
     }
+
+    public LiveData<InterestMarker> getMarkerByID(Integer mID){
+        GetMarkerByIDAsyncTask task = new GetMarkerByIDAsyncTask(mMarkerDao);
+        try{
+            return task.execute(mID).get();
+        }catch(Exception e){
+            return null;
+        }
+    }
+
+    public LiveData<List<InterestMarker>> getFavourites(String user) {
+        GetFavouritesAsyncTask task = new GetFavouritesAsyncTask(mMarkerDao);
+        try{
+            return task.execute(user).get();
+        }catch(Exception e){
+            return null;
+        }
+    }
+
+    public void removeFavourite(String user, Integer markerID){
+
+        new RemoveFavouriteAsyncTask(mMarkerDao).execute(user, markerID.toString());
+    }
+
+
+
+
+
+
+
+
+
+
+    //AsyncTasks
 
     private static class insertUserAsyncTask extends AsyncTask<LoginUser, Void, Void> {
         private LoginDao mAsyncTaskDao;
@@ -98,7 +137,61 @@ public class AppRepository {
 
         @Override
         protected Void doInBackground(final InterestMarker... params) {
-            mAsyncTaskDao.insert(params[0]);
+            mAsyncTaskDao.insertMarker(params[0]);
+            return null;
+        }
+    }
+
+    private static class insertFavouriteAsyncTask extends AsyncTask<Favourite, Void, Void>{
+        private MarkerDao mAsyncTaskDao;
+
+        insertFavouriteAsyncTask(MarkerDao dao){
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Favourite... params) {
+            mAsyncTaskDao.insertFavourite(params[0]);
+            return null;
+        }
+    }
+
+    private static class GetMarkerByIDAsyncTask extends AsyncTask<Integer, Void, LiveData<InterestMarker>> {
+        private MarkerDao mAsyncTaskDao;
+
+        GetMarkerByIDAsyncTask(MarkerDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected LiveData<InterestMarker> doInBackground(final Integer... params) {
+            return mAsyncTaskDao.getMarkerByID(params[0]);
+        }
+    }
+
+    private static class GetFavouritesAsyncTask extends AsyncTask<String, Void, LiveData<List<InterestMarker>>> {
+        private MarkerDao mAsyncTaskDao;
+
+        GetFavouritesAsyncTask(MarkerDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected LiveData<List<InterestMarker>> doInBackground(final String... params) {
+            return mAsyncTaskDao.getFavourites(params[0]);
+        }
+    }
+
+    private static class RemoveFavouriteAsyncTask extends AsyncTask<String, Void, Void>{
+        private MarkerDao mAsyncTaskDao;
+
+        RemoveFavouriteAsyncTask(MarkerDao dao){
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final String... params) {
+            mAsyncTaskDao.deleteFavourite(params[0], Integer.valueOf(params[1]));
             return null;
         }
     }
