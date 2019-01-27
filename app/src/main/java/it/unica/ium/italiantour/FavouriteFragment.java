@@ -3,7 +3,9 @@ package it.unica.ium.italiantour;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -14,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -22,11 +26,13 @@ import android.view.ViewGroup;
  */
 public class FavouriteFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
+
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
+
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+
+    private LiveData<List<InterestMarker>> mFavourites;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -35,7 +41,7 @@ public class FavouriteFragment extends Fragment {
     public FavouriteFragment() {
     }
 
-    // TODO: Customize parameter initialization
+
     @SuppressWarnings("unused")
     public static FavouriteFragment newInstance(int columnCount) {
         FavouriteFragment fragment = new FavouriteFragment();
@@ -55,23 +61,28 @@ public class FavouriteFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favourite_list, container, false);
 
         MainViewModel mvm = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        mFavourites = mvm.getFavourites();
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        //Create an adapter for our list once it's loaded
+        mFavourites.observe(this, list ->{
+            // Set the adapter
+            if (view instanceof RecyclerView) {
+                Context context = view.getContext();
+                RecyclerView recyclerView = (RecyclerView) view;
+                if (mColumnCount <= 1) {
+                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                } else {
+                    recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                }
+                recyclerView.setAdapter(new MyFavouriteRecyclerViewAdapter(mFavourites.getValue(), mListener));
             }
-            recyclerView.setAdapter(new MyFavouriteRecyclerViewAdapter(mvm.getFavourites().getValue(), mListener));
-        }
+        });
+
         return view;
     }
 

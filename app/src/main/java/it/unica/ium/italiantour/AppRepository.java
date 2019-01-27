@@ -1,6 +1,8 @@
 package it.unica.ium.italiantour;
 
 import android.app.Application;
+import android.database.sqlite.SQLiteConstraintException;
+import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -102,7 +104,11 @@ public class AppRepository {
 
         @Override
         protected Void doInBackground(final LoginUser... params) {
-            mAsyncTaskDao.insert(params[0]);
+            try{
+                mAsyncTaskDao.insert(params[0]);
+            }catch(SQLiteException e){
+                Log.d("user", e.getMessage());
+            }
             return null;
         }
     }
@@ -137,7 +143,11 @@ public class AppRepository {
 
         @Override
         protected Void doInBackground(final InterestMarker... params) {
-            mAsyncTaskDao.insertMarker(params[0]);
+            try{
+                mAsyncTaskDao.insertMarker(params[0]);
+            }catch(SQLiteException e){
+                Log.d("marker", e.getMessage());
+            }
             return null;
         }
     }
@@ -151,7 +161,11 @@ public class AppRepository {
 
         @Override
         protected Void doInBackground(final Favourite... params) {
-            mAsyncTaskDao.insertFavourite(params[0]);
+            try{
+                mAsyncTaskDao.insertFavourite(params[0]);
+            }catch(SQLiteException e){
+                Log.d("favourite", e.getMessage());
+            }
             return null;
         }
     }
@@ -191,7 +205,11 @@ public class AppRepository {
 
         @Override
         protected Void doInBackground(final String... params) {
-            mAsyncTaskDao.deleteFavourite(params[0], Integer.valueOf(params[1]));
+            try{
+                mAsyncTaskDao.deleteFavourite(params[0], Integer.valueOf(params[1]));
+            }catch(SQLiteException e){
+                Log.d("favourite removal", e.getMessage());
+            }
             return null;
         }
     }

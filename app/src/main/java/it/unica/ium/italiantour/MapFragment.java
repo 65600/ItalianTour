@@ -1,5 +1,6 @@
 package it.unica.ium.italiantour;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -22,6 +23,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
@@ -38,6 +40,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+
+
     }
 
     @Override
@@ -48,6 +52,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         FragmentManager fm = getChildFragmentManager();
         final SupportMapFragment mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
+
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        NavigationView nv = getActivity().findViewById(R.id.nav_view);
+
+        //If the user hasn't authenticated itself yet, we move him into the login tab.
+        if(mViewModel.getUser() == null){
+            //Set to invisible until the user is authenticated.
+            toolbar.setVisibility(View.GONE);
+            nv.setVisibility(View.GONE);
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.action_mapFragment_to_loginFragment);
+        }
 
         mapFragment.getMapAsync(this);
         return res;
@@ -98,6 +113,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             mViewModel.getSelectedMarker().observe( this, val -> {
                 //todo: This will execute once it's finished loading. Start details panel here.
                 Log.d("map", "DEBUG, marker selected: " + val.getName());
+                mViewModel.insertFavourite(val.id);
             });
             return false;
         });

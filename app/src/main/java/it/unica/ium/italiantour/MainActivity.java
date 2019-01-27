@@ -44,11 +44,6 @@ public class MainActivity extends AppCompatActivity implements FavouriteFragment
         NavigationUI.setupWithNavController(toolbar, navController, abc);
         NavigationUI.setupWithNavController(nv, navController);
 
-        //Set it to invisible until the user is authenticated.
-        toolbar.setVisibility(View.GONE);
-        nv.setVisibility(View.GONE);
-        //We first redirect the user away from the main fragment. This will also inflate the toolbar once done.
-        Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_mapFragment_to_loginFragment);
     }
 
 
