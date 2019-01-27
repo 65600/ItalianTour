@@ -3,6 +3,7 @@ package it.unica.ium.italiantour;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
@@ -59,6 +60,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         NavigationView nv = getActivity().findViewById(R.id.nav_view);
         bottomDetails = res.findViewById(R.id.details_panel);
+        bsb = BottomSheetBehavior.from(bottomDetails);
 
         //If the user hasn't authenticated itself yet, we move him into the login tab.
         if(mViewModel.getUser() == null){
@@ -68,8 +70,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.action_mapFragment_to_loginFragment);
         }
 
+
+
+        mapFragment.getMapAsync(this);
+        return res;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         //Set up behaviour for details panel.
-        bsb = BottomSheetBehavior.from(bottomDetails);
         bsb.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int i) {
@@ -77,17 +88,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     case BottomSheetBehavior.STATE_HIDDEN:
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
-                        InterestMarker val = mViewModel.getSelectedMarker().getValue();
-                        if( val != null){
-                            TextView details_title = getActivity().findViewById(R.id.details_title);
-                            TextView details_desc = getActivity().findViewById(R.id.details_desc);
-                            TextView details_orari = getActivity().findViewById(R.id.details_hours);
-                            details_title.setText(val.getName());
-                            details_orari.setText("Orari di apertura: " + val.getOrari());
-                            details_desc.setText(val.getDesc());
-                        }else{
-                            bsb.setState(BottomSheetBehavior.STATE_HIDDEN);
-                        }
                         break;
                     case BottomSheetBehavior.STATE_COLLAPSED:
                         break;
@@ -106,10 +106,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
         bsb.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-        mapFragment.getMapAsync(this);
-        return res;
+        updateDetailsPanel();
     }
-
 
     /**
      * Manipulates the map once available.
@@ -156,12 +154,38 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 //todo: This will execute once it's finished loading. Start details panel here.
                 Log.d("map", "DEBUG, marker selected: " + val.getName());
                 //mViewModel.insertFavourite(val.id);
+                updateDetailsPanel();
                 bsb.setState(BottomSheetBehavior.STATE_EXPANDED);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(val.getLat(), val.getLon()), 5));
             });
             return true;
         });
 
+        //If the map has been loaded from a favourites click event, pan onto the selected favourite.
+        int action = MapFragmentArgs.fromBundle(getArguments()).getActionRequired();
+        if (action ==1){
+            LiveData<InterestMarker> data = mViewModel.getSelectedMarker();
+            InterestMarker val;
+            if (data != null && (val = data.getValue()) != null){
+                bsb.setState(BottomSheetBehavior.STATE_EXPANDED);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(val.getLat(), val.getLon()), 5));
+            }
+        }
+
+    }
+
+    void updateDetailsPanel(){
+        LiveData<InterestMarker> data = mViewModel.getSelectedMarker();
+        InterestMarker val;
+        if (data != null && (val = data.getValue()) != null){
+
+            TextView details_title = getActivity().findViewById(R.id.details_title);
+            TextView details_desc = getActivity().findViewById(R.id.details_desc);
+            TextView details_orari = getActivity().findViewById(R.id.details_hours);
+            details_title.setText(val.getName());
+            details_orari.setText("Orari di apertura: " + val.getOrari());
+            details_desc.setText(val.getDesc());
+        }
     }
 
 }

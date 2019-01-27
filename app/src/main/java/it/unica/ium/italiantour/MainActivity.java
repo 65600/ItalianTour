@@ -17,15 +17,20 @@ import androidx.navigation.ui.NavigationUI;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 
 
 public class MainActivity extends AppCompatActivity implements FavouriteFragment.OnListFragmentInteractionListener {
 
     private DrawerLayout mDrawerLayout;
+    private MainViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +54,15 @@ public class MainActivity extends AppCompatActivity implements FavouriteFragment
 
     //Method called from clicking an item inside the favourites list.
     public void onListFragmentInteraction(InterestMarker item){
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         //todo: go back to main map, move camera to item position and open details panel.
+        mViewModel.setSelectedMarker(item.id);
+        mViewModel.getSelectedMarker().observe( this, val -> {
+            Log.d("favourites", "DEBUG, marker selected: " + val.getName());
+            FavouriteFragmentDirections.ActionFavouriteFragmentToMapFragment action = FavouriteFragmentDirections.actionFavouriteFragmentToMapFragment();
+            action.setActionRequired(1);
+            Navigation.findNavController(this, R.id.nav_host_fragment).navigate(action);
+        });
     }
 
     @Override
