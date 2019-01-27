@@ -162,8 +162,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
         //If the map has been loaded from a favourites click event, pan onto the selected favourite.
-        int action = MapFragmentArgs.fromBundle(getArguments()).getActionRequired();
-        if (action ==1){
+        LiveData<InterestMarker> action = mViewModel.getSelectedMarker();
+        if (action != null && action.getValue() != null){
+            // Center on last selected item.
             LiveData<InterestMarker> data = mViewModel.getSelectedMarker();
             InterestMarker val;
             if (data != null && (val = data.getValue()) != null){

@@ -55,13 +55,10 @@ public class MainActivity extends AppCompatActivity implements FavouriteFragment
     //Method called from clicking an item inside the favourites list.
     public void onListFragmentInteraction(InterestMarker item){
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        //todo: go back to main map, move camera to item position and open details panel.
         mViewModel.setSelectedMarker(item.id);
         mViewModel.getSelectedMarker().observe( this, val -> {
             Log.d("favourites", "DEBUG, marker selected: " + val.getName());
-            FavouriteFragmentDirections.ActionFavouriteFragmentToMapFragment action = FavouriteFragmentDirections.actionFavouriteFragmentToMapFragment();
-            action.setActionRequired(1);
-            Navigation.findNavController(this, R.id.nav_host_fragment).navigate(action);
+            Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_favouriteFragment_pop);
         });
     }
 

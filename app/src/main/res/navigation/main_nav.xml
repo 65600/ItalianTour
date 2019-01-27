@@ -20,10 +20,13 @@
             app:exitAnim="@anim/slide_out_right"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
-        <argument
-            android:name="actionRequired"
-            app:argType="integer"
-            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_mapFragment_to_newMarkerFragment"
+            app:destination="@id/newMarkerFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"  />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -63,15 +66,26 @@
         android:label="Preferiti"
         tools:layout="@layout/fragment_favourite_list" >
         <action
-            android:id="@+id/action_favouriteFragment_to_mapFragment"
-            app:destination="@id/mapFragment"
+            android:id="@+id/action_favouriteFragment_pop"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
+            app:popUpTo="@id/favouriteFragment"
+            app:popUpToInclusive="true"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" >
-            <argument
-                android:name="actionRequired"
-                android:defaultValue="1" />
-        </action>
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/newMarkerFragment"
+        android:name="it.unica.ium.italiantour.NewMarkerFragment"
+        android:label="Aggiungi "
+        tools:layout="@layout/fragment_new_marker">
+        <action
+            android:id="@+id/action_newMarkerFragment_pop"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popUpTo="@id/newMarkerFragment"
+            app:popUpToInclusive="true"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
 </navigation>
