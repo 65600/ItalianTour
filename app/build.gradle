@@ -53,6 +53,9 @@ dependencies {
     // optional - Coroutines support for Room
     implementation "androidx.room:room-coroutines:$room_version"
 
+    implementation 'com.android.support:appcompat-v7'
+    implementation 'com.android.support:design'
+
     // Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
 }

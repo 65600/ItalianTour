@@ -1,6 +1,7 @@
 package it.unica.ium.italiantour;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,6 +25,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -30,7 +33,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private MainViewModel mViewModel;
     private GoogleMap mMap;
-    private View layout;
+    private ConstraintLayout bottomDetails;
+    private BottomSheetBehavior bsb;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -40,7 +44,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
-
 
     }
 
@@ -55,6 +58,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         NavigationView nv = getActivity().findViewById(R.id.nav_view);
+        bottomDetails = res.findViewById(R.id.details_panel);
 
         //If the user hasn't authenticated itself yet, we move him into the login tab.
         if(mViewModel.getUser() == null){
@@ -63,6 +67,44 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             nv.setVisibility(View.GONE);
             Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.action_mapFragment_to_loginFragment);
         }
+
+        //Set up behaviour for details panel.
+        bsb = BottomSheetBehavior.from(bottomDetails);
+        bsb.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int i) {
+                switch(i){
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        InterestMarker val = mViewModel.getSelectedMarker().getValue();
+                        if( val != null){
+                            TextView details_title = getActivity().findViewById(R.id.details_title);
+                            TextView details_desc = getActivity().findViewById(R.id.details_desc);
+                            TextView details_orari = getActivity().findViewById(R.id.details_hours);
+                            details_title.setText(val.getName());
+                            details_orari.setText("Orari di apertura: " + val.getOrari());
+                            details_desc.setText(val.getDesc());
+                        }else{
+                            bsb.setState(BottomSheetBehavior.STATE_HIDDEN);
+                        }
+                        break;
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+
+            }
+        });
+        bsb.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         mapFragment.getMapAsync(this);
         return res;
@@ -113,12 +155,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             mViewModel.getSelectedMarker().observe( this, val -> {
                 //todo: This will execute once it's finished loading. Start details panel here.
                 Log.d("map", "DEBUG, marker selected: " + val.getName());
-                mViewModel.insertFavourite(val.id);
+                //mViewModel.insertFavourite(val.id);
+                bsb.setState(BottomSheetBehavior.STATE_EXPANDED);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(val.getLat(), val.getLon()), 5));
             });
-            return false;
+            return true;
         });
-
-
 
     }
 
