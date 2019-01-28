@@ -40,6 +40,14 @@ public class AppRepository {
         new insertUserAsyncTask(mLogindDao).execute(loginUser);
     }
 
+    public boolean usernameTaken(String name){
+        try {
+            return new checkUserAsyncTask(mLogindDao).execute(name).get();
+        }catch(Exception e){
+            return true;
+        }
+    }
+
     public void insertFavourite (Favourite favourite) {
         new insertFavouriteAsyncTask(mMarkerDao).execute(favourite);
     }
@@ -209,6 +217,25 @@ public class AppRepository {
                 Log.d("favourite removal", e.getMessage());
             }
             return null;
+        }
+    }
+
+    private class checkUserAsyncTask extends AsyncTask<String, Void, Boolean>{
+
+        private LoginDao mAsyncTaskDao;
+
+        public checkUserAsyncTask(LoginDao mLogindDao) {
+            mAsyncTaskDao = mLogindDao;
+        }
+
+        @Override
+        protected Boolean doInBackground(final String... params) {
+            try{
+                return !(mAsyncTaskDao.getCredentials(params[0]) == null);
+            }catch(Exception e){
+                Log.d("user check", e.getMessage());
+            }
+            return true;
         }
     }
 }

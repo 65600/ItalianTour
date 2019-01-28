@@ -31,4 +31,6 @@ public class LoginViewModel extends AndroidViewModel {
 
     public void insertUser(LoginUser newUser) { appRepo.insertUser(newUser); }
 
+    public boolean usernameTaken(String name){ return appRepo.usernameTaken(name);}
+
 }

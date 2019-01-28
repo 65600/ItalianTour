@@ -151,7 +151,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             InterestMarker data = (InterestMarker) m.getTag();
             mViewModel.setSelectedMarker(data.id);
             mViewModel.getSelectedMarker().observe( this, val -> {
-                //todo: This will execute once it's finished loading. Start details panel here.
                 Log.d("map", "DEBUG, marker selected: " + val.getName());
                 //mViewModel.insertFavourite(val.id);
                 updateDetailsPanel();

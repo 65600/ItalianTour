@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
@@ -15,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.material.snackbar.Snackbar;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,6 +27,7 @@ import android.widget.EditText;
 public class RegisterFragment extends Fragment {
 
     private LoginViewModel mViewModel;
+    private View layout;
 
     public static RegisterFragment newInstance(String param1, String param2) {
         return new RegisterFragment();
@@ -40,18 +44,38 @@ public class RegisterFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
-        Button imageBackButton = view.findViewById(R.id.image_back_button);
+        layout = view.findViewById(R.id.registerPanelLayout);
+        AppCompatImageButton imageBackButton = view.findViewById(R.id.image_back_button);
         Button continueButton = view.findViewById(R.id.registerRegistratiButton);
         EditText mail = view.findViewById(R.id.registerEmailField);
         EditText user = view.findViewById(R.id.registerUsernameField);
         EditText pass = view.findViewById(R.id.registerPasswordField);
 
         continueButton.setOnClickListener(v -> {
-            //todo: registration checks
-            LoginUser newUser = new LoginUser(user.getText().toString(), pass.getText().toString(), mail.getText().toString());
-            mViewModel.insertUser(newUser);
-            //todo: Visible message about insertion.
-            Navigation.findNavController(v).navigate(R.id.action_registerFragment_pop);
+            String name = user.getText().toString();
+            String pw = pass.getText().toString();
+            String e = mail.getText().toString();
+            //Current registration checks: non-empty everything, username not taken, one @ in the email field.
+            if(name.length() > 0 && !mViewModel.usernameTaken(name) && pw.length() > 0 && (e.length() > 0 && e.indexOf('@') > -1 ) ){
+                LoginUser newUser = new LoginUser(name, pw, e);
+                mViewModel.insertUser(newUser);
+                Snackbar.make(layout, "Utente creato con successo", Snackbar.LENGTH_SHORT).show();
+                Navigation.findNavController(v).navigate(R.id.action_registerFragment_pop);
+            }else{
+                Snackbar.make(layout, "Errore nella creazione dell'utente. Verificare i dati inseriti.", Snackbar.LENGTH_SHORT).show();
+                if(name.length() > 0 && mViewModel.usernameTaken(name)){
+                    user.setError("Nome utente già presente");
+                }else{
+                    user.setError("Nome utente vuoto");
+                }
+                if(pw.length() < 1){
+                    pass.setError("Password vuota");
+                }
+                if(!(e.length() > 0 && e.indexOf('@') > -1 )){
+                    mail.setError("Indirizzo email non valido.");
+                }
+
+            }
         });
 
         imageBackButton.setOnClickListener(v -> {
