@@ -17,11 +17,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:scaleType="centerCrop"
+        android:contentDescription="Foto"
+        android:scaleType="fitCenter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/backgrounds/scenic"
-        android:contentDescription="Foto" />
+        tools:srcCompat="@drawable/ic_image_black_24dp" />
 
     <TextView
         android:id="@+id/details_title"

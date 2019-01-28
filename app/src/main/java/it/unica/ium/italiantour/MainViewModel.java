@@ -1,6 +1,7 @@
 package it.unica.ium.italiantour;
 
 import android.app.Application;
+import android.location.Location;
 
 import java.util.List;
 
@@ -17,13 +18,16 @@ public class MainViewModel extends AndroidViewModel {
     private LiveData<List<InterestMarker>> allMarkers;
     private LiveData<List<InterestMarker>> favourites;
     private LiveData<InterestMarker> selectedMarker;
+    private MutableLiveData<Location> currentLocation;
+    private GPSTracker tracker;
 
     public MainViewModel(Application application){
         super(application);
         appRepo = new AppRepository(application);
         user = null;
         allMarkers = appRepo.getAllMarkers();
-        //todo: all other livedata elements from queries
+        currentLocation = new MutableLiveData<>();
+        tracker = new GPSTracker(getApplication(), currentLocation);
     }
 
     public void insertMarker(InterestMarker marker){ appRepo.insertMarker(marker);}
@@ -59,5 +63,13 @@ public class MainViewModel extends AndroidViewModel {
     public void setUser(LoginUser user) {
         this.user = user;
         this.favourites = appRepo.getFavourites(user.getUsername());
+    }
+
+    public LiveData<Location> getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public void restartTracker(){
+        tracker = new GPSTracker(getApplication(), currentLocation);
     }
 }

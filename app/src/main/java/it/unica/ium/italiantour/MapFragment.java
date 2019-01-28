@@ -6,6 +6,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,11 +21,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.location.Location;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -139,6 +145,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         //Every time the list of markers changes (eg. we added or deleted one), redraw them on the map. Uses LiveData.observe().
         mViewModel.getAllMarkers().observe(this, list ->{
             mMap.clear();
+            addFollowingMarker();
             for( InterestMarker m : list){
                 LatLng m_coords = new LatLng(m.getLat(), m.getLon());
                 Marker marker = mMap.addMarker(new MarkerOptions().position(m_coords).title(m.getName()));
@@ -149,18 +156,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // Every time we click on a marker, we select it, and load its data into the details tab.
         mMap.setOnMarkerClickListener(m -> {
             InterestMarker data = (InterestMarker) m.getTag();
-            mViewModel.setSelectedMarker(data.id);
-            mViewModel.getSelectedMarker().observe( this, val -> {
-                Log.d("map", "DEBUG, marker selected: " + val.getName());
-                //mViewModel.insertFavourite(val.id);
-                updateDetailsPanel();
-                bsb.setState(BottomSheetBehavior.STATE_EXPANDED);
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(val.getLat(), val.getLon()), 5));
-            });
-            return true;
+            if (data != null) {
+
+                mViewModel.setSelectedMarker(data.id);
+                mViewModel.getSelectedMarker().observe( this, val -> {
+                    Log.d("map", "DEBUG, marker selected: " + val.getName());
+                    //mViewModel.insertFavourite(val.id);
+                    updateDetailsPanel();
+                    bsb.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(val.getLat(), val.getLon()), 12));
+                });
+                return true;
+            }else{
+                return false;
+            }
         });
 
-        //If the map has been loaded from a favourites click event, pan onto the selected favourite.
+
+
+        //If the map has been loaded with an item selected, pan onto the selected item.
         LiveData<InterestMarker> action = mViewModel.getSelectedMarker();
         if (action != null && action.getValue() != null){
             // Center on last selected item.
@@ -168,10 +182,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             InterestMarker val;
             if (data != null && (val = data.getValue()) != null){
                 bsb.setState(BottomSheetBehavior.STATE_EXPANDED);
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(val.getLat(), val.getLon()), 5));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(val.getLat(), val.getLon()), 12));
             }
+        }else{ //Starts map screen zoomed in on your current position.
+            addFollowingMarker();
         }
 
+    }
+
+    private void addFollowingMarker(){
+        mViewModel.getCurrentLocation().observe(this, startingLocation -> {
+            if (startingLocation!= null) {
+                LatLng coords = new LatLng(startingLocation.getLatitude(), startingLocation.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coords, 14));
+                Marker marker = mMap.addMarker(new MarkerOptions().position(coords).title("Tu sei qui")
+                        .icon(getMarkerIconFromDrawable(getResources().getDrawable(R.drawable.ic_person_pin_circle_black_24dp))));
+                mViewModel.getCurrentLocation().removeObservers(this); //Replace this observer with just a simple marker update
+                mViewModel.getCurrentLocation().observe(this,  newLocation-> {
+                    LatLng newc = new LatLng(newLocation.getLatitude(), newLocation.getLongitude());
+                    marker.setPosition(newc);
+                });
+            }
+        });
     }
 
     void updateDetailsPanel(){
@@ -186,6 +218,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             details_orari.setText("Orari di apertura: " + val.getOrari());
             details_desc.setText(val.getDesc());
         }
+    }
+
+    private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
+        Canvas canvas = new Canvas();
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
 }
