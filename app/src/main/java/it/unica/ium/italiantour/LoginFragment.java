@@ -19,7 +19,7 @@ import android.widget.EditText;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-
+//Commit Test Andres
 public class LoginFragment extends Fragment {
 
     private LoginViewModel loginViewModel;
