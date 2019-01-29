@@ -51,10 +51,7 @@ public class LoginFragment extends Fragment {
 
 
         login.setOnClickListener(v -> {
-            Snackbar sb = Snackbar.make(layout, "Accesso in corso...", Snackbar.LENGTH_SHORT);
-            sb.show();
             LoginUser res = loginViewModel.validateCredentials(username.getText().toString(), password.getText().toString());
-            sb.dismiss();
             if(res != null){
                 mainViewModel.setUser(res);
                 Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
