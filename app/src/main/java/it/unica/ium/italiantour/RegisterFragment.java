@@ -18,6 +18,8 @@ import android.widget.EditText;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import org.jetbrains.annotations.NotNull;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,12 +31,12 @@ public class RegisterFragment extends Fragment {
     private LoginViewModel mViewModel;
     private View layout;
 
-    public static RegisterFragment newInstance(String param1, String param2) {
+    public static RegisterFragment newInstance() {
         return new RegisterFragment();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_register, container, false);

@@ -21,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.location.Location;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,7 +33,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -95,13 +93,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
                         break;
+                    case BottomSheetBehavior.STATE_HALF_EXPANDED:
+                        break;
                     case BottomSheetBehavior.STATE_COLLAPSED:
                         break;
                     case BottomSheetBehavior.STATE_DRAGGING:
                         break;
                     case BottomSheetBehavior.STATE_SETTLING:
                         break;
-
                 }
             }
 
@@ -206,7 +205,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-    void updateDetailsPanel(){
+    private void updateDetailsPanel(){
         LiveData<InterestMarker> data = mViewModel.getSelectedMarker();
         InterestMarker val;
         if (data != null && (val = data.getValue()) != null){

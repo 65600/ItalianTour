@@ -7,7 +7,7 @@ import java.util.List;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-public class LoginViewModel extends AndroidViewModel {
+class LoginViewModel extends AndroidViewModel {
 
     private AppRepository appRepo;
     private LiveData<List<LoginUser>> mAllCreds;

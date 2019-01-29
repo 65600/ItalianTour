@@ -1,5 +1,7 @@
 package it.unica.ium.italiantour;
 
+import org.jetbrains.annotations.NotNull;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -22,7 +24,7 @@ public class LoginUser {
     private String email;
 
     //Constructor
-    public LoginUser(String username, String password, String email){
+    public LoginUser(@NotNull String username, @NotNull String password, @NotNull String email){
         this.username = username;
         this.password = password;
         this.email = email;
@@ -30,14 +32,17 @@ public class LoginUser {
 
     //Get statements
 
+    @NotNull
     public String getUsername(){
         return username;
     }
 
+    @NotNull
     public String getPassword(){
         return password;
     }
 
+    @NotNull
     public String getEmail(){
         return email;
     }

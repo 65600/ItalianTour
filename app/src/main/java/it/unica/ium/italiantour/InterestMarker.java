@@ -1,10 +1,7 @@
 package it.unica.ium.italiantour;
 
 
-import com.google.android.gms.maps.model.LatLng;
-
 import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 

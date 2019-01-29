@@ -12,12 +12,12 @@ import androidx.lifecycle.LiveData;
  * The repository retrieves data from the appropriate DAO.
  */
 
-public class AppRepository {
+class AppRepository {
 
-    private LoginDao mLogindDao;
-    private MarkerDao mMarkerDao;
-    private LiveData<List<LoginUser>> mAllCreds;
-    private LiveData<List<InterestMarker>> mAllMarkers;
+    private final LoginDao mLogindDao;
+    private final MarkerDao mMarkerDao;
+    private final LiveData<List<LoginUser>> mAllCreds;
+    private final LiveData<List<InterestMarker>> mAllMarkers;
 
     AppRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
@@ -102,7 +102,7 @@ public class AppRepository {
     //AsyncTasks
 
     private static class insertUserAsyncTask extends AsyncTask<LoginUser, Void, Void> {
-        private LoginDao mAsyncTaskDao;
+        private final LoginDao mAsyncTaskDao;
 
         insertUserAsyncTask(LoginDao dao) {
             mAsyncTaskDao = dao;
@@ -120,7 +120,7 @@ public class AppRepository {
     }
 
     private static class validateUserAsyncTask extends AsyncTask<LoginUser, Void, LoginUser> {
-        private LoginDao mAsyncTaskDao;
+        private final LoginDao mAsyncTaskDao;
 
         validateUserAsyncTask(LoginDao dao) {
             mAsyncTaskDao = dao;
@@ -141,7 +141,7 @@ public class AppRepository {
     }
 
     private static class insertMarkerAsyncTask extends AsyncTask<InterestMarker, Void, Void>{
-        private MarkerDao mAsyncTaskDao;
+        private final MarkerDao mAsyncTaskDao;
 
         insertMarkerAsyncTask(MarkerDao dao){
             mAsyncTaskDao = dao;
@@ -159,7 +159,7 @@ public class AppRepository {
     }
 
     private static class insertFavouriteAsyncTask extends AsyncTask<Favourite, Void, Void>{
-        private MarkerDao mAsyncTaskDao;
+        private final MarkerDao mAsyncTaskDao;
 
         insertFavouriteAsyncTask(MarkerDao dao){
             mAsyncTaskDao = dao;
@@ -177,7 +177,7 @@ public class AppRepository {
     }
 
     private static class GetMarkerByIDAsyncTask extends AsyncTask<Integer, Void, LiveData<InterestMarker>> {
-        private MarkerDao mAsyncTaskDao;
+        private final MarkerDao mAsyncTaskDao;
 
         GetMarkerByIDAsyncTask(MarkerDao dao) {
             mAsyncTaskDao = dao;
@@ -190,7 +190,7 @@ public class AppRepository {
     }
 
     private static class GetFavouritesAsyncTask extends AsyncTask<String, Void, LiveData<List<InterestMarker>>> {
-        private MarkerDao mAsyncTaskDao;
+        private final MarkerDao mAsyncTaskDao;
 
         GetFavouritesAsyncTask(MarkerDao dao) {
             mAsyncTaskDao = dao;
@@ -203,7 +203,7 @@ public class AppRepository {
     }
 
     private static class RemoveFavouriteAsyncTask extends AsyncTask<String, Void, Void>{
-        private MarkerDao mAsyncTaskDao;
+        private final MarkerDao mAsyncTaskDao;
 
         RemoveFavouriteAsyncTask(MarkerDao dao){
             mAsyncTaskDao = dao;
@@ -222,9 +222,9 @@ public class AppRepository {
 
     private class checkUserAsyncTask extends AsyncTask<String, Void, Boolean>{
 
-        private LoginDao mAsyncTaskDao;
+        private final LoginDao mAsyncTaskDao;
 
-        public checkUserAsyncTask(LoginDao mLogindDao) {
+        checkUserAsyncTask(LoginDao mLogindDao) {
             mAsyncTaskDao = mLogindDao;
         }
 

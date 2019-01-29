@@ -9,7 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-public class MainViewModel extends AndroidViewModel {
+class MainViewModel extends AndroidViewModel {
     // TODO: Implement the ViewModel
 
     private AppRepository appRepo;

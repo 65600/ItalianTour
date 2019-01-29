@@ -2,12 +2,13 @@ package it.unica.ium.italiantour;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.jetbrains.annotations.NotNull;
 
 import it.unica.ium.italiantour.FavouriteFragment.OnListFragmentInteractionListener;
 
@@ -27,28 +28,26 @@ public class MyFavouriteRecyclerViewAdapter extends RecyclerView.Adapter<MyFavou
         mListener = listener;
     }
 
+    @NotNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_favourite, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NotNull final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mTitle.setText(mValues.get(position).getName());
         holder.mDesc.setText(mValues.get(position).getDesc());
         //todo: make thumbnail data from saved photos
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
+        holder.mView.setOnClickListener(v -> {
+            if (null != mListener) {
+                // Notify the active callbacks interface (the activity, if the
+                // fragment is attached to one) that an item has been selected.
+                mListener.onListFragmentInteraction(holder.mItem);
             }
         });
     }
@@ -59,20 +58,21 @@ public class MyFavouriteRecyclerViewAdapter extends RecyclerView.Adapter<MyFavou
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mTitle;
-        public final TextView mDesc;
-        public final ImageView mThumbnail;
-        public InterestMarker mItem;
+        final View mView;
+        final TextView mTitle;
+        final TextView mDesc;
+        final ImageView mThumbnail;
+        InterestMarker mItem;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             mView = view;
-            mTitle = (TextView) view.findViewById(R.id.marker_title);
-            mDesc = (TextView) view.findViewById(R.id.marker_desc);
-            mThumbnail = (ImageView) view.findViewById(R.id.marker_thumbnail);
+            mTitle = view.findViewById(R.id.marker_title);
+            mDesc = view.findViewById(R.id.marker_desc);
+            mThumbnail = view.findViewById(R.id.marker_thumbnail);
         }
 
+        @NotNull
         @Override
         public String toString() {
             return super.toString() + " '" + mDesc.getText() + "'";

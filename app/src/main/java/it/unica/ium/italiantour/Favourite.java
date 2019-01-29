@@ -1,5 +1,7 @@
 package it.unica.ium.italiantour;
 
+import org.jetbrains.annotations.NotNull;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -15,7 +17,7 @@ public class Favourite {
     @ForeignKey(entity = InterestMarker.class, parentColumns = "id", childColumns = "markerId")
     private Integer markerId;
 
-    public Favourite(String user, Integer markerId) {
+    public Favourite(@NotNull String user, @NotNull Integer markerId) {
         this.user = user;
         this.markerId = markerId;
     }
