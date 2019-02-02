@@ -7,6 +7,7 @@
     tools:context=".NewMarkerFragment" >
 
     <ScrollView
+        android:id="@+id/newMarker_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -34,8 +35,8 @@
                 android:id="@+id/newMarker_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
@@ -80,20 +81,47 @@
                 tools:layout_conversion_absoluteHeight="45dp"
                 tools:layout_conversion_absoluteWidth="0dp" />
 
+            <TextView
+                android:id="@+id/newMarker_position_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:text="Posizione"
+                app:layout_constraintStart_toStartOf="@+id/newMarker_desc"
+                app:layout_constraintTop_toBottomOf="@+id/newMarker_desc" />
+
+            <fragment
+                android:id="@+id/newMarker_fragment"
+                android:name="it.unica.ium.italiantour.WorkaroundMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/newMarker_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/newMarker_position_text" />
+
+
             <Button
                 android:id="@+id/newMarker_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:text="Aggiungi"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/newMarker_desc" />
+                app:layout_constraintTop_toBottomOf="@+id/newMarker_fragment" />
 
             <!--
             TODO: add marker categories (radio?), marker position selection (new map fragment?), media insertion
@@ -104,5 +132,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -29,6 +30,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -127,6 +129,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            getActivity(), R.raw.style_json));
+
+            if (!success) {
+                Log.e("map", "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e("map", "Can't find style. Error: ", e);
+        }
+
+
         /*
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
@@ -163,7 +180,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     //mViewModel.insertFavourite(val.id);
                     updateDetailsPanel();
                     bsb.setState(BottomSheetBehavior.STATE_EXPANDED);
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(val.getLat(), val.getLon()), 12));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(val.getLat(), val.getLon())));
                 });
                 return true;
             }else{
@@ -181,7 +198,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             InterestMarker val;
             if (data != null && (val = data.getValue()) != null){
                 bsb.setState(BottomSheetBehavior.STATE_EXPANDED);
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(val.getLat(), val.getLon()), 12));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(val.getLat(), val.getLon())));
             }
         }else{ //Starts map screen zoomed in on your current position.
             addFollowingMarker();
@@ -219,7 +236,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
+    public static BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
         Canvas canvas = new Canvas();
         Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         canvas.setBitmap(bitmap);

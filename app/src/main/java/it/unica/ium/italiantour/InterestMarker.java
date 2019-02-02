@@ -1,6 +1,8 @@
 package it.unica.ium.italiantour;
 
 
+import com.google.android.gms.maps.model.LatLng;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -36,6 +38,15 @@ public class InterestMarker {
         this.desc = desc;
         this.lat = lat;
         this.lon = lon;
+    }
+
+    public InterestMarker(@NonNull String name, String creator, String orari, String desc, LatLng coords) {
+        this.name = name;
+        this.creator = creator;
+        this.orari = orari;
+        this.desc = desc;
+        this.lat = coords.latitude;
+        this.lon = coords.longitude;
     }
 
 
