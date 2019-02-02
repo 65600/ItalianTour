@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,6 +36,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -230,9 +233,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             TextView details_title = getActivity().findViewById(R.id.details_title);
             TextView details_desc = getActivity().findViewById(R.id.details_desc);
             TextView details_orari = getActivity().findViewById(R.id.details_hours);
+            Button favButton = getActivity().findViewById(R.id.details_favButton);
+
             details_title.setText(val.getName());
             details_orari.setText("Orari di apertura: " + val.getOrari());
             details_desc.setText(val.getDesc());
+            //Contextually change favourites
+            mViewModel.getFavourites().observe(this, interestMarkers -> {
+                if(containsID(interestMarkers, val.getId())){
+                    buttonLayoutRemove(favButton);
+                    favButton.setOnClickListener(view -> {
+                        mViewModel.removeFavourite(val.getId());
+                    });
+                }else{
+                    buttonLayoutAdd(favButton);
+                    favButton.setOnClickListener(view -> {
+                        mViewModel.insertFavourite(val.getId());
+                    });
+                }
+            });
+
         }
     }
 
@@ -244,5 +264,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         drawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
+
+    public boolean containsID(final List<InterestMarker> list, final Integer id){
+        for( InterestMarker item : list){
+            if(item.getId() == id){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void buttonLayoutRemove(Button b){
+        b.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_favorite_white_24dp), null, null, null);
+        b.setText("Rimuovi");
+    }
+    void buttonLayoutAdd(Button b){
+
+        b.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp), null, null, null);
+        b.setText("Aggiungi");
+    }
+
 
 }

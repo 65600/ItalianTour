@@ -123,6 +123,7 @@ public class NewMarkerFragment extends Fragment {
         Marker marker;
         if(nmvm.getMarkerPos() != null && nmvm.getMarkerPos().getValue() != null){
             marker = mMap.addMarker(new MarkerOptions().position(nmvm.getMarkerPos().getValue()).title("Selezione"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(nmvm.getMarkerPos().getValue(), 14));
         }else{
             Location startingLocation = mViewModel.getCurrentLocation().getValue();
             if (startingLocation != null) {

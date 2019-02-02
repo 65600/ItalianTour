@@ -2,11 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/mapFragment"
+        android:icon="@drawable/ic_map_white_24dp"
         android:title="Mappa"/>
     <item
         android:id="@+id/favouriteFragment"
+        android:icon="@drawable/ic_favorite_white_24dp"
         android:title="Preferiti"/>
     <item
         android:id="@+id/newMarkerFragment"
+        android:icon="@drawable/ic_add_location_white_24dp"
         android:title="Aggiungi luogo"/>
 </menu>
