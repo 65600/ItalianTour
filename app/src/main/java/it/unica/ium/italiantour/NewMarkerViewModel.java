@@ -18,11 +18,12 @@ public class NewMarkerViewModel extends AndroidViewModel {
     private String markerName;
     private String desc;
     private String hours;
-    private Uri imageUri;
+    private MutableLiveData<Uri> imageUri;
 
     public NewMarkerViewModel(@NonNull Application application) {
         super(application);
-        markerPos = new MutableLiveData<LatLng>();
+        markerPos = new MutableLiveData<>();
+        imageUri = new MutableLiveData<>();
         hours = desc = markerName = null;
     }
 
@@ -58,12 +59,12 @@ public class NewMarkerViewModel extends AndroidViewModel {
         this.hours = hours;
     }
 
-    public Uri getImageUri() {
+    public LiveData<Uri> getImageUri() {
         return imageUri;
     }
 
     public void setImageUri(Uri imageUri) {
-        this.imageUri = imageUri;
+        this.imageUri.setValue(imageUri);
     }
 
 

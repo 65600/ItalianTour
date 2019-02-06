@@ -1,6 +1,5 @@
 package it.unica.ium.italiantour;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -11,6 +10,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
@@ -91,11 +91,16 @@ public class NewMarkerFragment extends Fragment {
             name.setText(nmvm.getMarkerName());
             desc.setText(nmvm.getDesc());
             hours.setText(nmvm.getHours());
-
-            //Load photo
-            Uri photoRes = nmvm.getImageUri();
-            loadPictureFromUri(photo, photoRes, getActivity());
         }
+
+        //Load photo when it's ready
+        LiveData<Uri> photoRes = nmvm.getImageUri();
+        photoRes.observe( this, u ->{
+            if(u != null){
+                loadPictureFromUri(photo, u, getActivity());
+                photo.setVisibility(View.VISIBLE);
+            }
+        });
 
 
         if (mMap == null) {
@@ -144,8 +149,8 @@ public class NewMarkerFragment extends Fragment {
 
         addButton.setOnClickListener( v -> {
             nmvm.setAll(name.getText().toString(), hours.getText().toString(), desc.getText().toString());
-            InterestMarker res = new InterestMarker(nmvm.getMarkerName(), mViewModel.getUser().getUsername(), nmvm.getHours(), nmvm.getDesc(), nmvm.getMarkerPos().getValue(), nmvm.getImageUri());
             //TODO: check if the fields are built correctly
+            InterestMarker res = new InterestMarker(nmvm.getMarkerName(), mViewModel.getUser().getUsername(), nmvm.getHours(), nmvm.getDesc(), nmvm.getMarkerPos().getValue(), nmvm.getImageUri().getValue());
             mViewModel.insertMarker(res);
             nmvm.resetFields();
             Navigation.findNavController(v).navigate(R.id.action_newMarkerFragment_pop);
@@ -154,12 +159,11 @@ public class NewMarkerFragment extends Fragment {
         photoButton.setOnClickListener( v -> {
             nmvm.setAll(name.getText().toString(), hours.getText().toString(), desc.getText().toString());
             // Create intent to Open Image applications like Gallery, Google Photos
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+            Intent galleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             galleryIntent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
             // Start the Intent
             getActivity().startActivityForResult(galleryIntent, LOAD_PICTURE);
-            Navigation.findNavController(v).navigate(R.id.action_newMarkerFragment_pop);
         });
 
 

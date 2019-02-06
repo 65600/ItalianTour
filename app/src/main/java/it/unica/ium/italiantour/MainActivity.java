@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements FavouriteFragment
     private MainViewModel mViewModel;
 
     public final static int LOAD_PICTURE = 3;
+    public static int takeFlags;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,18 +140,26 @@ public class MainActivity extends AppCompatActivity implements FavouriteFragment
                 // TODO: add image uri to new marker data, navigate to new marker fragment if an user is logged in.
                 Log.d("Images", selectedImage.toString());
 
+                takeFlags = data.getFlags()
+                        & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                // Check for the freshest data.
+                getContentResolver().takePersistableUriPermission(selectedImage, takeFlags);
+
+
                 NewMarkerViewModel nmvm = ViewModelProviders.of(this).get(NewMarkerViewModel.class);
                 MainViewModel mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
                 if(null != mViewModel.getUser()){
                     //Only if we're already logged in can we navigate to the new marker screen
                     nmvm.setImageUri(selectedImage);
-                    Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_global_newFragment);
+                    //Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_global_newFragment); //This shouldnt be necessary, resuming the activity with proper viewmodels.
+                }else{
+                    Log.e("IMG", "Saving image error");
                 }
 
             } else {
                 Log.e("layout", "Immagine non selezionata");
-                Log.e(Integer.toString(requestCode), data.getData().toString());
             }
         } catch (Exception e) {
             Log.e("layout",  "Errore durante la selezione");
@@ -168,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements FavouriteFragment
                 photo.setImageDrawable(Drawable.createFromStream(
                         a.getContentResolver().openInputStream(photoRes), photoRes.toString()));
             }
-            photo.setVisibility(View.VISIBLE);
         } catch (Exception e) {
             Log.e("PHOTO", "errore di caricamento foto");
             Log.e("PHOTO", e.getMessage());
