@@ -1,6 +1,8 @@
 package it.unica.ium.italiantour;
 
 
+import android.net.Uri;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import androidx.annotation.NonNull;
@@ -30,23 +32,37 @@ public class InterestMarker {
 
     private Double lat;
     private Double lon;
+    private String photoUri;
 
-    public InterestMarker(@NonNull String name, String creator, String orari, String desc, Double lat, Double lon) {
+
+    public InterestMarker(@NonNull String name, String creator, String orari, String desc, Double lat, Double lon, String photoUri) {
         this.name = name;
         this.creator = creator;
         this.orari = orari;
         this.desc = desc;
         this.lat = lat;
         this.lon = lon;
+        this.photoUri = photoUri;
     }
 
-    public InterestMarker(@NonNull String name, String creator, String orari, String desc, LatLng coords) {
+    public InterestMarker(@NonNull String name, String creator, String orari, String desc, Double lat, Double lon, Uri photoUri) {
+        this.name = name;
+        this.creator = creator;
+        this.orari = orari;
+        this.desc = desc;
+        this.lat = lat;
+        this.lon = lon;
+        this.photoUri = photoUri.toString();
+    }
+
+    public InterestMarker(@NonNull String name, String creator, String orari, String desc, LatLng coords, Uri photoUri) {
         this.name = name;
         this.creator = creator;
         this.orari = orari;
         this.desc = desc;
         this.lat = coords.latitude;
         this.lon = coords.longitude;
+        this.photoUri = photoUri.toString();
     }
 
 
@@ -81,4 +97,14 @@ public class InterestMarker {
     public Double getLon() {
         return lon;
     }
+
+
+    public Uri getPhotoUriParsed() {
+        return Uri.parse(photoUri);
+    }
+
+    public String getPhotoUri() {
+        return  photoUri;
+    }
+
 }

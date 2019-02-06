@@ -14,6 +14,8 @@ import it.unica.ium.italiantour.FavouriteFragment.OnListFragmentInteractionListe
 
 import java.util.List;
 
+import static it.unica.ium.italiantour.MainActivity.loadPictureFromUri;
+
 /**
  * {@link RecyclerView.Adapter} that can display an {@link InterestMarker} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
@@ -41,7 +43,7 @@ public class MyFavouriteRecyclerViewAdapter extends RecyclerView.Adapter<MyFavou
         holder.mItem = mValues.get(position);
         holder.mTitle.setText(mValues.get(position).getName());
         holder.mDesc.setText(mValues.get(position).getDesc());
-        //todo: make thumbnail data from saved photos
+        loadPictureFromUri(holder.mThumbnail, mValues.get(position).getPhotoUriParsed(), holder.mView.getContext());
 
         holder.mView.setOnClickListener(v -> {
             if (null != mListener) {

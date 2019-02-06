@@ -1,7 +1,11 @@
 package it.unica.ium.italiantour;
 
+import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -28,7 +33,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
+import static android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+import static it.unica.ium.italiantour.MainActivity.LOAD_PICTURE;
+import static it.unica.ium.italiantour.MainActivity.loadPictureFromUri;
 
 
 /**
@@ -65,10 +79,24 @@ public class NewMarkerFragment extends Fragment {
         TextView name = view.findViewById(R.id.newMarker_name);
         TextView desc = view.findViewById(R.id.newMarker_desc);
         TextView hours = view.findViewById(R.id.newMarker_hours);
+        ImageView photo = view.findViewById(R.id.newMarker_imageView);
 
-        Button addButton = view.findViewById(R.id.newMarker_button);
+        Button addButton = view.findViewById(R.id.newMarker_add_button);
+        Button photoButton = view.findViewById(R.id.newMarker_pictureBtn);
         TextView posText = view.findViewById(R.id.newMarker_position_text);
         ScrollView mScrollView = view.findViewById(R.id.newMarker_scroll);
+
+        //todo: load data from viewmodel if it's not null
+        if(nmvm.getMarkerName() != null){
+            name.setText(nmvm.getMarkerName());
+            desc.setText(nmvm.getDesc());
+            hours.setText(nmvm.getHours());
+
+            //Load photo
+            Uri photoRes = nmvm.getImageUri();
+            loadPictureFromUri(photo, photoRes, getActivity());
+        }
+
 
         if (mMap == null) {
             SupportMapFragment mapFragment = (WorkaroundMapFragment) getChildFragmentManager().findFragmentById(R.id.newMarker_fragment);
@@ -107,16 +135,35 @@ public class NewMarkerFragment extends Fragment {
         }
 
         nmvm.getMarkerPos().observe(this, latLng -> {
-            posText.setText("Posizione: " + latLng.latitude + ", " + latLng.longitude);
+            if(latLng != null) {
+                posText.setText("Posizione: " + latLng.latitude + ", " + latLng.longitude);
+            }else{
+                posText.setText("Posizione:");
+            }
         });
 
         addButton.setOnClickListener( v -> {
-            InterestMarker res = new InterestMarker(name.getText().toString(), mViewModel.getUser().getUsername(),
-                    hours.getText().toString(), desc.getText().toString(), nmvm.getMarkerPos().getValue());
+            nmvm.setAll(name.getText().toString(), hours.getText().toString(), desc.getText().toString());
+            InterestMarker res = new InterestMarker(nmvm.getMarkerName(), mViewModel.getUser().getUsername(), nmvm.getHours(), nmvm.getDesc(), nmvm.getMarkerPos().getValue(), nmvm.getImageUri());
             //TODO: check if the fields are built correctly
             mViewModel.insertMarker(res);
+            nmvm.resetFields();
             Navigation.findNavController(v).navigate(R.id.action_newMarkerFragment_pop);
         });
+
+        photoButton.setOnClickListener( v -> {
+            nmvm.setAll(name.getText().toString(), hours.getText().toString(), desc.getText().toString());
+            // Create intent to Open Image applications like Gallery, Google Photos
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            galleryIntent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+            // Start the Intent
+            getActivity().startActivityForResult(galleryIntent, LOAD_PICTURE);
+            Navigation.findNavController(v).navigate(R.id.action_newMarkerFragment_pop);
+        });
+
+
+
     }
 
     private Marker addSelectionMarker(){ //Start position selector from previous position

@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,6 +39,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
+
+import static it.unica.ium.italiantour.MainActivity.loadPictureFromUri;
+
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -156,7 +160,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         //Example of our own marker structure and parsing with observer.
         InterestMarker testMarker = new InterestMarker("Cagliari", mViewModel.getUser().getUsername(),
-                "0:00 - 23:59","Marker di prova per la mappa", 39.216667, 9.116667);
+                "0:00 - 23:59","Marker di prova per la mappa", 39.216667, 9.116667,"");
         if(mViewModel.getAllMarkers().getValue() == null ||  mViewModel.getAllMarkers().getValue().size() == 0){
             mViewModel.insertMarker(testMarker);
         }
@@ -187,7 +191,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 });
                 return true;
             }else{
-                return false;
+                m.showInfoWindow();
+                return true;
             }
         });
 
@@ -233,12 +238,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             TextView details_title = getActivity().findViewById(R.id.details_title);
             TextView details_desc = getActivity().findViewById(R.id.details_desc);
             TextView details_orari = getActivity().findViewById(R.id.details_hours);
+            ImageView details_thumb = getActivity().findViewById(R.id.details_thumbnail);
             Button favButton = getActivity().findViewById(R.id.details_favButton);
 
             details_title.setText(val.getName());
             details_orari.setText("Orari di apertura: " + val.getOrari());
             details_desc.setText(val.getDesc());
-            //Contextually change favourites
+            loadPictureFromUri(details_thumb, val.getPhotoUriParsed(), getContext());
+            //Contextually change favourites button
             mViewModel.getFavourites().observe(this, interestMarkers -> {
                 if(containsID(interestMarkers, val.getId())){
                     buttonLayoutRemove(favButton);

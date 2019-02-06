@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/newMarker_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".NewMarkerFragment" >
@@ -102,26 +103,59 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/newMarker_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/newMarker_position_text" />
 
-
-            <Button
-                android:id="@+id/newMarker_button"
+            <TextView
+                android:id="@+id/newMarker_fotoText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Foto:"
+                app:layout_constraintBottom_toBottomOf="@+id/newMarker_pictureBtn"
+                app:layout_constraintStart_toStartOf="@+id/newMarker_position_text"
+                app:layout_constraintTop_toTopOf="@+id/newMarker_pictureBtn" />
+
+            <Button
+                android:id="@+id/newMarker_pictureBtn"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Aggiungi/Modifica Foto"
+                android:textSize="12sp"
+                app:layout_constraintStart_toEndOf="@+id/newMarker_fotoText"
+                app:layout_constraintTop_toBottomOf="@+id/newMarker_fragment" />
+
+            <ImageView
+                android:id="@+id/newMarker_imageView"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@+id/newMarker_fotoText"
+                app:layout_constraintTop_toBottomOf="@+id/newMarker_pictureBtn"
+                tools:src="@tools:sample/backgrounds/scenic[12]" />
+
+            <Button
+                android:id="@+id/newMarker_add_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="64dp"
+                android:layout_marginLeft="64dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="64dp"
+                android:layout_marginRight="64dp"
                 android:text="Aggiungi"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/newMarker_fragment" />
+                app:layout_constraintTop_toBottomOf="@+id/newMarker_imageView" />
 
             <!--
             TODO: add marker categories (radio?), marker position selection (new map fragment?), media insertion
