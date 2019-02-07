@@ -2,6 +2,7 @@ package it.unica.ium.italiantour;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
@@ -72,6 +73,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         NavigationView nv = getActivity().findViewById(R.id.nav_view);
+        DrawerLayout drawerContainer = requireActivity().findViewById(R.id.main_container);
         bottomDetails = res.findViewById(R.id.details_panel);
         bsb = BottomSheetBehavior.from(bottomDetails);
 
@@ -81,6 +83,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             toolbar.setVisibility(View.GONE);
             nv.setVisibility(View.GONE);
             Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.action_mapFragment_to_loginFragment);
+            drawerContainer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
 
 

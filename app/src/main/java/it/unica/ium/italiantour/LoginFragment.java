@@ -1,6 +1,7 @@
 package it.unica.ium.italiantour;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
@@ -56,8 +57,10 @@ public class LoginFragment extends Fragment {
                 mainViewModel.setUser(res);
                 Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
                 NavigationView nv = getActivity().findViewById(R.id.nav_view);
+                DrawerLayout dl = requireActivity().findViewById(R.id.main_container);
                 toolbar.setVisibility(View.VISIBLE);
                 nv.setVisibility(View.VISIBLE);
+                dl.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mapFragment);
             }else{
                 Snackbar.make(layout, "Errore di accesso. Verificare nome utente e password.", Snackbar.LENGTH_LONG).show();
