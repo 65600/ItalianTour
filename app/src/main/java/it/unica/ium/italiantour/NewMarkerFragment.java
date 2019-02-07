@@ -165,7 +165,7 @@ public class NewMarkerFragment extends Fragment implements AdapterView.OnItemSel
                     nmvm.getHours().length() > 0 &&
                     nmvm.getDesc().length() > 0 &&
                     nmvm.getMarkerPos() != null &&
-                    //nmvm.getImageUri() != null && nmvm.getImageUri().getValue() != null && //Should we allow not to set a picture?
+                    nmvm.getImageUri() != null && nmvm.getImageUri().getValue() != null && //Should we allow not to set a picture?
                     nmvm.getCategory() != 0){
             InterestMarker res = new InterestMarker(nmvm.getMarkerName(), mViewModel.getUser().getUsername(), nmvm.getHours(), nmvm.getDesc(), nmvm.getMarkerPos().getValue(), nmvm.getImageUri().getValue(), nmvm.getCategory());
             mViewModel.insertMarker(res);

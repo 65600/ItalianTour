@@ -59,7 +59,7 @@ public class InterestMarker {
         this.desc = desc;
         this.lat = lat;
         this.lon = lon;
-        this.photoUri = photoUri.toString();
+        this.photoUri = photoUri == null?"":photoUri.toString();
         this.categories = categories;
     }
 
@@ -70,7 +70,7 @@ public class InterestMarker {
         this.desc = desc;
         this.lat = coords.latitude;
         this.lon = coords.longitude;
-        this.photoUri = photoUri.toString();
+        this.photoUri = photoUri == null?"":photoUri.toString();
         this.categories = categories;
     }
 

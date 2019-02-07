@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements FavouriteFragment
         mViewModel.setSelectedMarker(item.id);
         mViewModel.getSelectedMarker().observe( this, val -> {
             Log.d("favourites", "DEBUG, marker category: " + val.getCategories());
-            Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_favouriteFragment_pop);
+            Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_global_mapFragment);
         });
     }
 

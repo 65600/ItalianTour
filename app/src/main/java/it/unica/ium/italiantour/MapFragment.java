@@ -198,7 +198,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             addFollowingMarker();
             for( InterestMarker m : list){
                 LatLng m_coords = new LatLng(m.getLat(), m.getLon());
-                Marker marker = mMap.addMarker(new MarkerOptions().position(m_coords).title(m.getName()));
+                //TODO: color code them based on category?
+                Marker marker;
+                switch (m.getCategories()) {
+                    case InterestMarker.MONUMENTI:
+                         marker = mMap.addMarker(new MarkerOptions().position(m_coords).title(m.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                         break;
+                    default:
+                         marker = mMap.addMarker(new MarkerOptions().position(m_coords).title(m.getName()));
+                }
                 marker.setTag(m);
             }
         });
@@ -207,7 +215,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap.setOnMarkerClickListener(m -> {
             InterestMarker data = (InterestMarker) m.getTag();
             if (data != null) {
-
+                m.showInfoWindow();
                 mViewModel.setSelectedMarker(data.id);
                 mViewModel.getSelectedMarker().observe( this, val -> {
                     Log.d("map", "DEBUG, marker selected: " + val.getName());
@@ -229,11 +237,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         LiveData<InterestMarker> action = mViewModel.getSelectedMarker();
         if (action != null && action.getValue() != null){
             // Center on last selected item.
+            updateDetailsPanel();
             LiveData<InterestMarker> data = mViewModel.getSelectedMarker();
             InterestMarker val;
             if (data != null && (val = data.getValue()) != null){
                 bsb.setState(BottomSheetBehavior.STATE_EXPANDED);
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(val.getLat(), val.getLon())));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(val.getLat(), val.getLon()),14));
             }
         }else{ //Starts map screen zoomed in on your current position.
             addFollowingMarker();
