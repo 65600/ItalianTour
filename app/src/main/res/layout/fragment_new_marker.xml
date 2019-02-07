@@ -172,13 +172,6 @@
                 app:layout_constraintStart_toEndOf="@+id/newMarker_category_text"
                 app:layout_constraintTop_toBottomOf="@+id/newMarker_desc" />
 
-            <!--
-            TODO: add marker categories (radio, checkmark or dropdown?)
-            -->
-
-
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

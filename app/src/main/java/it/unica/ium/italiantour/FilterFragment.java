@@ -14,19 +14,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 
-import java.util.List;
-
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
 public class FilterFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
@@ -37,7 +27,6 @@ public class FilterFragment extends Fragment {
     public FilterFragment() {
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static FilterFragment newInstance(int columnCount) {
         FilterFragment fragment = new FilterFragment();
@@ -113,7 +102,6 @@ public class FilterFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(Filtri.Filtro item);
     }
 }

@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -158,22 +159,30 @@ public class NewMarkerFragment extends Fragment implements AdapterView.OnItemSel
 
 
         addButton.setOnClickListener( v -> {
-            //TODO: add int from category selection.
             nmvm.setAll(name.getText().toString(), hours.getText().toString(), desc.getText().toString());
-            //TODO: check if the fields are built correctly
             if(nmvm.getMarkerName().length() > 0 && //Username not
                     mViewModel.getUser().getUsername().length() > 0 &&
                     nmvm.getHours().length() > 0 &&
                     nmvm.getDesc().length() > 0 &&
                     nmvm.getMarkerPos() != null &&
-                    nmvm.getImageUri() != null && nmvm.getImageUri().getValue() != null &&
+                    //nmvm.getImageUri() != null && nmvm.getImageUri().getValue() != null && //Should we allow not to set a picture?
                     nmvm.getCategory() != 0){
             InterestMarker res = new InterestMarker(nmvm.getMarkerName(), mViewModel.getUser().getUsername(), nmvm.getHours(), nmvm.getDesc(), nmvm.getMarkerPos().getValue(), nmvm.getImageUri().getValue(), nmvm.getCategory());
             mViewModel.insertMarker(res);
             nmvm.resetFields();
             Navigation.findNavController(v).navigate(R.id.action_newMarkerFragment_pop);
             }else{
-                //TODO check each fail condition
+                View layout = requireActivity().findViewById(R.id.newMarker_layout);
+                if(nmvm.getMarkerName().length() <= 0){
+                    name.setError("Campo vuoto");
+                }
+                if(nmvm.getHours().length() <= 0){
+                    hours.setError("Campo vuoto");
+                }
+                if(nmvm.getDesc().length() <= 0){
+                    desc.setError("Campo vuoto");
+                }
+                Snackbar.make(layout, "Errore di inserimento: uno o più campi risultano vuoti.", Snackbar.LENGTH_LONG).show();
             }
         });
 

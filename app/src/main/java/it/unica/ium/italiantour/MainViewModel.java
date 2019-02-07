@@ -17,8 +17,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 class MainViewModel extends AndroidViewModel {
-    // TODO: Implement the ViewModel
-
     private AppRepository appRepo;
 
     private LoginUser user;
