@@ -2,7 +2,6 @@ package it.unica.ium.italiantour;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,13 +12,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -73,10 +72,9 @@ public class NewMarkerFragment extends Fragment {
         TextView name = view.findViewById(R.id.newMarker_name);
         TextView desc = view.findViewById(R.id.newMarker_desc);
         TextView hours = view.findViewById(R.id.newMarker_hours);
-        ImageView photo = view.findViewById(R.id.newMarker_imageView);
+        AppCompatImageView photo = view.findViewById(R.id.newMarker_imageView);
 
         Button addButton = view.findViewById(R.id.newMarker_add_button);
-        Button photoButton = view.findViewById(R.id.newMarker_pictureBtn);
         TextView posText = view.findViewById(R.id.newMarker_position_text);
         ScrollView mScrollView = view.findViewById(R.id.newMarker_scroll);
 
@@ -146,13 +144,23 @@ public class NewMarkerFragment extends Fragment {
             //TODO: add int from category selection.
             nmvm.setAll(name.getText().toString(), hours.getText().toString(), desc.getText().toString(), category);
             //TODO: check if the fields are built correctly
+            if(nmvm.getMarkerName().length() > 0 && //Username not
+                    mViewModel.getUser().getUsername().length() > 0 &&
+                    nmvm.getHours().length() > 0 &&
+                    nmvm.getDesc().length() > 0 &&
+                    nmvm.getMarkerPos() != null &&
+                    nmvm.getImageUri() != null && nmvm.getImageUri().getValue() != null &&
+                    nmvm.getCategory() != 0){
             InterestMarker res = new InterestMarker(nmvm.getMarkerName(), mViewModel.getUser().getUsername(), nmvm.getHours(), nmvm.getDesc(), nmvm.getMarkerPos().getValue(), nmvm.getImageUri().getValue(), nmvm.getCategory());
             mViewModel.insertMarker(res);
             nmvm.resetFields();
             Navigation.findNavController(v).navigate(R.id.action_newMarkerFragment_pop);
+            }else{
+                //TODO check each fail condition
+            }
         });
 
-        photoButton.setOnClickListener( v -> {
+        photo.setOnClickListener( v -> {
             int category = -1;
             nmvm.setAll(name.getText().toString(), hours.getText().toString(), desc.getText().toString(), category);
             // Create intent to Open Image applications like Gallery, Google Photos

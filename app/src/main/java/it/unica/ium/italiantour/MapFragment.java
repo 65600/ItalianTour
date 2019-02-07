@@ -237,7 +237,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Button favButton = getActivity().findViewById(R.id.details_favButton);
 
             details_title.setText(val.getName());
-            details_orari.setText("Orari di apertura: " + val.getOrari());
+            details_orari.setText("Aperto " + val.getOrari());
             details_desc.setText(val.getDesc());
             loadPictureFromUri(details_thumb, val.getPhotoUriParsed(), getContext());
             //Contextually change favourites button
