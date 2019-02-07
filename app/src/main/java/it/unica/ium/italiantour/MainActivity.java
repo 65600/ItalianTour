@@ -137,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements FavouriteFragment
                 // Get the Image from data
 
                 Uri selectedImage = data.getData();
-                // TODO: add image uri to new marker data, navigate to new marker fragment if an user is logged in.
                 Log.d("Images", selectedImage.toString());
 
                 takeFlags = data.getFlags()

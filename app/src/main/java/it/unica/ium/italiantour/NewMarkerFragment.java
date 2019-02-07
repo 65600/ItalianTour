@@ -34,12 +34,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-
-import static android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static it.unica.ium.italiantour.MainActivity.LOAD_PICTURE;
 import static it.unica.ium.italiantour.MainActivity.loadPictureFromUri;
@@ -86,7 +80,6 @@ public class NewMarkerFragment extends Fragment {
         TextView posText = view.findViewById(R.id.newMarker_position_text);
         ScrollView mScrollView = view.findViewById(R.id.newMarker_scroll);
 
-        //todo: load data from viewmodel if it's not null
         if(nmvm.getMarkerName() != null){
             name.setText(nmvm.getMarkerName());
             desc.setText(nmvm.getDesc());
@@ -147,17 +140,21 @@ public class NewMarkerFragment extends Fragment {
             }
         });
 
+
         addButton.setOnClickListener( v -> {
-            nmvm.setAll(name.getText().toString(), hours.getText().toString(), desc.getText().toString());
+            int category = -1;
+            //TODO: add int from category selection.
+            nmvm.setAll(name.getText().toString(), hours.getText().toString(), desc.getText().toString(), category);
             //TODO: check if the fields are built correctly
-            InterestMarker res = new InterestMarker(nmvm.getMarkerName(), mViewModel.getUser().getUsername(), nmvm.getHours(), nmvm.getDesc(), nmvm.getMarkerPos().getValue(), nmvm.getImageUri().getValue());
+            InterestMarker res = new InterestMarker(nmvm.getMarkerName(), mViewModel.getUser().getUsername(), nmvm.getHours(), nmvm.getDesc(), nmvm.getMarkerPos().getValue(), nmvm.getImageUri().getValue(), nmvm.getCategory());
             mViewModel.insertMarker(res);
             nmvm.resetFields();
             Navigation.findNavController(v).navigate(R.id.action_newMarkerFragment_pop);
         });
 
         photoButton.setOnClickListener( v -> {
-            nmvm.setAll(name.getText().toString(), hours.getText().toString(), desc.getText().toString());
+            int category = -1;
+            nmvm.setAll(name.getText().toString(), hours.getText().toString(), desc.getText().toString(), category);
             // Create intent to Open Image applications like Gallery, Google Photos
             Intent galleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);

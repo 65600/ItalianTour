@@ -151,22 +151,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
 
 
-        /*
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        */
 
-        //Example of our own marker structure and parsing with observer.
-        InterestMarker testMarker = new InterestMarker("Cagliari", mViewModel.getUser().getUsername(),
-                "0:00 - 23:59","Marker di prova per la mappa", 39.216667, 9.116667,"");
+        //Example of our own marker structure and parsing with observer. We don't need to add it in the code anymore.
+        /*InterestMarker testMarker = new InterestMarker("Cagliari", mViewModel.getUser().getUsername(),
+                "0:00 - 23:59","Marker di prova per la mappa", 39.216667, 9.116667,"", InterestMarker.MONUMENTI);
         if(mViewModel.getAllMarkers().getValue() == null ||  mViewModel.getAllMarkers().getValue().size() == 0){
             mViewModel.insertMarker(testMarker);
         }
+        */
 
         //Every time the list of markers changes (eg. we added or deleted one), redraw them on the map. Uses LiveData.observe().
-        mViewModel.getAllMarkers().observe(this, list ->{
+        mViewModel.getFilteredMarkers().observe(this, list ->{
             mMap.clear();
             addFollowingMarker();
             for( InterestMarker m : list){

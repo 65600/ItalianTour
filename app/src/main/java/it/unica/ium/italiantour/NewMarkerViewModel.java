@@ -19,6 +19,7 @@ public class NewMarkerViewModel extends AndroidViewModel {
     private String desc;
     private String hours;
     private MutableLiveData<Uri> imageUri;
+    private int category;
 
     public NewMarkerViewModel(@NonNull Application application) {
         super(application);
@@ -68,15 +69,25 @@ public class NewMarkerViewModel extends AndroidViewModel {
     }
 
 
-    public void setAll(String name, String hours, String desc){
+    public void setAll(String name, String hours, String desc, int category){
         setMarkerName(name);
         setDesc(desc);
         setHours(hours);
+        setCategory(category);
     }
 
     public void resetFields(){
         markerPos.setValue(null);
         hours = desc = markerName = null;
     }
+
+    public Integer getCategory() {
+        return category;
+    }
+
+    public void setCategory(Integer category) {
+        this.category = category;
+    }
+
 
 }

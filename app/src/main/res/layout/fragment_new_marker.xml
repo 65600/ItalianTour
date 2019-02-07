@@ -158,7 +158,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/newMarker_imageView" />
 
             <!--
-            TODO: add marker categories (radio?), marker position selection (new map fragment?), media insertion
+            TODO: add marker categories (radio, checkmark or dropdown?)
             -->
 
 

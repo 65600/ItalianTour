@@ -16,7 +16,12 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "marker")
 public class InterestMarker {
 
-    //todo: add enum for marker type
+    final static int MONUMENTI = 1;
+    final static int RISTORANTI = 2;
+    final static int ARTE = 4;
+    final static int SPORT = 8;
+    final static int SVAGO = 16;
+    final static int NATURA = 32;
 
     @PrimaryKey(autoGenerate = true)
     Integer id;
@@ -33,9 +38,10 @@ public class InterestMarker {
     private Double lat;
     private Double lon;
     private String photoUri;
+    private Integer categories;
 
 
-    public InterestMarker(@NonNull String name, String creator, String orari, String desc, Double lat, Double lon, String photoUri) {
+    public InterestMarker(@NonNull String name, String creator, String orari, String desc, Double lat, Double lon, String photoUri, Integer categories) {
         this.name = name;
         this.creator = creator;
         this.orari = orari;
@@ -43,9 +49,10 @@ public class InterestMarker {
         this.lat = lat;
         this.lon = lon;
         this.photoUri = photoUri;
+        this.categories = categories;
     }
 
-    public InterestMarker(@NonNull String name, String creator, String orari, String desc, Double lat, Double lon, Uri photoUri) {
+    public InterestMarker(@NonNull String name, String creator, String orari, String desc, Double lat, Double lon, Uri photoUri, Integer categories) {
         this.name = name;
         this.creator = creator;
         this.orari = orari;
@@ -53,9 +60,10 @@ public class InterestMarker {
         this.lat = lat;
         this.lon = lon;
         this.photoUri = photoUri.toString();
+        this.categories = categories;
     }
 
-    public InterestMarker(@NonNull String name, String creator, String orari, String desc, LatLng coords, Uri photoUri) {
+    public InterestMarker(@NonNull String name, String creator, String orari, String desc, LatLng coords, Uri photoUri, Integer categories ) {
         this.name = name;
         this.creator = creator;
         this.orari = orari;
@@ -63,6 +71,7 @@ public class InterestMarker {
         this.lat = coords.latitude;
         this.lon = coords.longitude;
         this.photoUri = photoUri.toString();
+        this.categories = categories;
     }
 
 
@@ -107,4 +116,7 @@ public class InterestMarker {
         return  photoUri;
     }
 
+    public Integer getCategories() {
+        return categories;
+    }
 }

@@ -76,6 +76,16 @@ class AppRepository {
         }
     }
 
+    public LiveData<List<InterestMarker>> getFilteredMarkers(Integer categories){
+        FilterQueryAsyncTask task = new FilterQueryAsyncTask(mMarkerDao);
+        try{
+            return task.execute(categories).get();
+        }catch(Exception e){
+            return null;
+        }
+    }
+
+
     public LiveData<List<InterestMarker>> getFavourites(String user) {
         GetFavouritesAsyncTask task = new GetFavouritesAsyncTask(mMarkerDao);
         try{
@@ -236,6 +246,18 @@ class AppRepository {
                 Log.d("user check", e.getMessage());
             }
             return true;
+        }
+    }
+
+    private static class FilterQueryAsyncTask extends AsyncTask<Integer, Void, LiveData<List<InterestMarker>>> {
+        private final MarkerDao mAsyncTaskDao;
+
+        FilterQueryAsyncTask(MarkerDao dao) {
+            mAsyncTaskDao = dao;
+        }
+        @Override
+        protected LiveData<List<InterestMarker>> doInBackground(final Integer... params) {
+            return mAsyncTaskDao.newFilterQuery(params[0]);
         }
     }
 }

@@ -3,11 +3,18 @@ package it.unica.ium.italiantour;
 import android.app.Application;
 import android.location.Location;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 
 class MainViewModel extends AndroidViewModel {
     // TODO: Implement the ViewModel
@@ -15,19 +22,26 @@ class MainViewModel extends AndroidViewModel {
     private AppRepository appRepo;
 
     private LoginUser user;
+    private MutableLiveData<Integer> filter;
     private LiveData<List<InterestMarker>> allMarkers;
+    private LiveData<List<InterestMarker>> filteredMarkers;
     private LiveData<List<InterestMarker>> favourites;
     private LiveData<InterestMarker> selectedMarker;
     private MutableLiveData<Location> currentLocation;
     private GPSTracker tracker;
 
-    public MainViewModel(Application application){
+    public MainViewModel(Application application) {
         super(application);
         appRepo = new AppRepository(application);
         user = null;
         allMarkers = appRepo.getAllMarkers();
         currentLocation = new MutableLiveData<>();
+        filter = new MutableLiveData<>();
+        filter.setValue(-1);
         tracker = new GPSTracker(getApplication(), currentLocation);
+        filteredMarkers = Transformations.switchMap(filter, i ->{
+            return appRepo.getFilteredMarkers(i);
+        });
     }
 
     public void insertMarker(InterestMarker marker){ appRepo.insertMarker(marker);}
@@ -71,5 +85,13 @@ class MainViewModel extends AndroidViewModel {
 
     public void restartTracker(){
         tracker = new GPSTracker(getApplication(), currentLocation);
+    }
+
+    public LiveData<List<InterestMarker>> getFilteredMarkers() {
+        return filteredMarkers;
+    }
+
+    public void newFilter(int categories){
+        filter.setValue(categories);
     }
 }
