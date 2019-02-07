@@ -26,6 +26,7 @@ public class NewMarkerViewModel extends AndroidViewModel {
         markerPos = new MutableLiveData<>();
         imageUri = new MutableLiveData<>();
         hours = desc = markerName = null;
+        category = 1;
     }
 
     public LiveData<LatLng> getMarkerPos() {
@@ -69,16 +70,17 @@ public class NewMarkerViewModel extends AndroidViewModel {
     }
 
 
-    public void setAll(String name, String hours, String desc, int category){
+    public void setAll(String name, String hours, String desc){
         setMarkerName(name);
         setDesc(desc);
         setHours(hours);
-        setCategory(category);
     }
 
     public void resetFields(){
         markerPos.setValue(null);
+        imageUri.setValue(null);
         hours = desc = markerName = null;
+        category = 1;
     }
 
     public Integer getCategory() {

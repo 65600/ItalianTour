@@ -34,7 +34,7 @@ public interface MarkerDao{
     @Query("SELECT * FROM marker WHERE id in (SELECT markerId FROM favourite WHERE user LIKE :user )")
     LiveData<List<InterestMarker>> getFavourites(String user);
 
-    @Query("SELECT * FROM marker WHERE categories & :categories != 0")
+    @Query("SELECT * FROM marker WHERE (categories & :categories) != 0")
     LiveData<List<InterestMarker>> newFilterQuery(Integer categories);
 
 }

@@ -37,7 +37,8 @@ class MainViewModel extends AndroidViewModel {
         allMarkers = appRepo.getAllMarkers();
         currentLocation = new MutableLiveData<>();
         filter = new MutableLiveData<>();
-        filter.setValue(-1);
+        //Start with all values selected
+        filter.setValue(63);
         tracker = new GPSTracker(getApplication(), currentLocation);
         filteredMarkers = Transformations.switchMap(filter, i ->{
             return appRepo.getFilteredMarkers(i);
@@ -93,5 +94,9 @@ class MainViewModel extends AndroidViewModel {
 
     public void newFilter(int categories){
         filter.setValue(categories);
+    }
+
+    public Integer getFilter(){
+        return filter.getValue();
     }
 }

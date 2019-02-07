@@ -27,6 +27,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 
 import com.google.android.material.navigation.NavigationView;
@@ -38,7 +39,7 @@ import java.io.File;
 import java.io.FileInputStream;
 
 
-public class MainActivity extends AppCompatActivity implements FavouriteFragment.OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements FavouriteFragment.OnListFragmentInteractionListener, FilterFragment.OnListFragmentInteractionListener{
 
     private DrawerLayout mDrawerLayout;
     private MainViewModel mViewModel;
@@ -76,10 +77,15 @@ public class MainActivity extends AppCompatActivity implements FavouriteFragment
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         mViewModel.setSelectedMarker(item.id);
         mViewModel.getSelectedMarker().observe( this, val -> {
-            Log.d("favourites", "DEBUG, marker selected: " + val.getName());
+            Log.d("favourites", "DEBUG, marker category: " + val.getCategories());
             Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_favouriteFragment_pop);
         });
     }
+
+    public void onListFragmentInteraction(Filtri.Filtro item){
+        //Everything is updated in real time inside the holder class.
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

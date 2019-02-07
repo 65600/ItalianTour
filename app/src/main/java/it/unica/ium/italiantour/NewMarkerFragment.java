@@ -18,8 +18,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ScrollView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,6 +38,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static it.unica.ium.italiantour.MainActivity.LOAD_PICTURE;
 import static it.unica.ium.italiantour.MainActivity.loadPictureFromUri;
@@ -41,7 +49,7 @@ import static it.unica.ium.italiantour.MainActivity.loadPictureFromUri;
 /**
  * A simple {@link Fragment} subclass
  */
-public class NewMarkerFragment extends Fragment {
+public class NewMarkerFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private NewMarkerViewModel nmvm;
     private MainViewModel mViewModel;
@@ -139,10 +147,19 @@ public class NewMarkerFragment extends Fragment {
         });
 
 
+        //Set categories in spinner.
+        Spinner catSpinner = view.findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> aa = ArrayAdapter.createFromResource(requireContext(), R.array.categories, android.R.layout.simple_spinner_item);
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        catSpinner.setAdapter(aa);
+        catSpinner.setOnItemSelectedListener(this);
+
+
+
+
         addButton.setOnClickListener( v -> {
-            int category = -1;
             //TODO: add int from category selection.
-            nmvm.setAll(name.getText().toString(), hours.getText().toString(), desc.getText().toString(), category);
+            nmvm.setAll(name.getText().toString(), hours.getText().toString(), desc.getText().toString());
             //TODO: check if the fields are built correctly
             if(nmvm.getMarkerName().length() > 0 && //Username not
                     mViewModel.getUser().getUsername().length() > 0 &&
@@ -161,8 +178,7 @@ public class NewMarkerFragment extends Fragment {
         });
 
         photo.setOnClickListener( v -> {
-            int category = -1;
-            nmvm.setAll(name.getText().toString(), hours.getText().toString(), desc.getText().toString(), category);
+            nmvm.setAll(name.getText().toString(), hours.getText().toString(), desc.getText().toString());
             // Create intent to Open Image applications like Gallery, Google Photos
             Intent galleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -193,4 +209,18 @@ public class NewMarkerFragment extends Fragment {
         }
         return marker;
     }
+
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        NewMarkerViewModel nmvm = ViewModelProviders.of(requireActivity()).get(NewMarkerViewModel.class);
+        nmvm.setCategory(1<<pos);
+        Log.d("NEW_CAT", Integer.toString(nmvm.getCategory()));
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
+    }
+
+
+
 }

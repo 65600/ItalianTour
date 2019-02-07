@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Italian Tour</string>
+    <string-array name="categories">
+        <item>Monumenti</item>
+        <item>Ristoranti</item>
+        <item>Arte</item>
+        <item>Sport</item>
+        <item>Svago</item>
+        <item>Natura</item>
+    </string-array>
 </resources>

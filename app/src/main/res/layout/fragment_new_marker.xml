@@ -68,6 +68,15 @@
                 android:layout_marginTop="16dp"
                 android:text="Posizione"
                 app:layout_constraintStart_toStartOf="@+id/newMarker_position_text2"
+                app:layout_constraintTop_toBottomOf="@+id/spinner" />
+
+            <TextView
+                android:id="@+id/newMarker_category_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Categoria"
+                app:layout_constraintStart_toStartOf="@+id/newMarker_position_text2"
                 app:layout_constraintTop_toBottomOf="@+id/newMarker_desc" />
 
             <TextView
@@ -149,6 +158,19 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/newMarker_imageView" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/newMarker_category_text"
+                app:layout_constraintTop_toBottomOf="@+id/newMarker_desc" />
 
             <!--
             TODO: add marker categories (radio, checkmark or dropdown?)

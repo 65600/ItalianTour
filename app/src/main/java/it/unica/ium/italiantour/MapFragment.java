@@ -4,6 +4,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -79,6 +80,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         NavigationView nv = requireActivity().findViewById(R.id.nav_view);
         DrawerLayout drawerContainer = requireActivity().findViewById(R.id.main_container);
         bottomDetails = res.findViewById(R.id.details_panel);
+        Button filterButton = res.findViewById(R.id.filter_button);
         bsb = BottomSheetBehavior.from(bottomDetails);
 
         //If the user hasn't authenticated itself yet, we move him into the login tab.
@@ -89,6 +91,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.action_mapFragment_to_loginFragment);
             drawerContainer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
+
+        filterButton.setOnClickListener(v -> {
+
+            //Check if filter panel is currently on screen
+            if(res.findViewById(R.id.filterLayout) == null){
+                //Spawn filter selecting fragment
+                FragmentManager fragmentManager = requireFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                //Custom fragment animation on start and end fragment
+                fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_right);
+
+                Fragment filterFragment = new FilterFragment();
+                fragmentTransaction.add(R.id.coordinator, filterFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+                filterButton.setVisibility(View.GONE);
+            }
+        });
 
 
 
@@ -217,6 +237,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         }else{ //Starts map screen zoomed in on your current position.
             addFollowingMarker();
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mViewModel.getCurrentLocation().getValue().getLatitude(),
+                    mViewModel.getCurrentLocation().getValue().getLongitude()) , 14));
         }
 
     }
@@ -225,7 +247,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mViewModel.getCurrentLocation().observe(this, startingLocation -> {
             if (startingLocation!= null) {
                 LatLng coords = new LatLng(startingLocation.getLatitude(), startingLocation.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coords, 14));
                 Marker marker = mMap.addMarker(new MarkerOptions().position(coords).title("Tu sei qui")
                         .icon(getMarkerIconFromDrawable(getResources().getDrawable(R.drawable.ic_person_pin_circle_black_24dp))));
                 mViewModel.getCurrentLocation().removeObservers(this); //Replace this observer with just a simple marker update
