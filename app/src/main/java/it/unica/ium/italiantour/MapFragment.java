@@ -7,10 +7,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,6 +25,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -95,6 +99,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        //Hide keyboard on load.
+        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
 
         //Set up behaviour for details panel.
         bsb.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -238,6 +247,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             TextView details_orari = requireActivity().findViewById(R.id.details_hours);
             ImageView details_thumb = requireActivity().findViewById(R.id.details_thumbnail);
             Button favButton = requireActivity().findViewById(R.id.details_favButton);
+            Button navButton = requireActivity().findViewById(R.id.details_nav);
 
             details_title.setText(val.getName());
             details_orari.setText("Aperto " + val.getOrari());
@@ -256,6 +266,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         mViewModel.insertFavourite(val.getId());
                     });
                 }
+            });
+            navButton.setOnClickListener(view -> {
+                Uri gmmIntentUri = Uri.parse("google.navigation:q="+val.getLat()+","+val.getLon());
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
             });
 
         }

@@ -2,6 +2,7 @@ package it.unica.ium.italiantour;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
 import android.view.LayoutInflater;
@@ -46,6 +47,9 @@ public class WorkaroundMapFragment extends SupportMapFragment {
         public boolean dispatchTouchEvent(MotionEvent event) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    //Hide the keyboard on touching the map.
+                    InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getWindowToken(), 0);
                     mListener.onTouch();
                     break;
                 case MotionEvent.ACTION_UP:
