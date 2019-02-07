@@ -59,8 +59,8 @@ public class NewMarkerFragment extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        nmvm = ViewModelProviders.of(getActivity()).get(NewMarkerViewModel.class);
-        mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        nmvm = ViewModelProviders.of(requireActivity()).get(NewMarkerViewModel.class);
+        mViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_new_marker, container, false);
 
@@ -88,7 +88,7 @@ public class NewMarkerFragment extends Fragment {
         LiveData<Uri> photoRes = nmvm.getImageUri();
         photoRes.observe( this, u ->{
             if(u != null){
-                loadPictureFromUri(photo, u, getActivity());
+                loadPictureFromUri(photo, u, requireActivity());
                 photo.setVisibility(View.VISIBLE);
             }
         });
@@ -111,7 +111,7 @@ public class NewMarkerFragment extends Fragment {
                         // in a raw resource file.
                         boolean success = googleMap.setMapStyle(
                                 MapStyleOptions.loadRawResourceStyle(
-                                        getActivity(), R.raw.style_json));
+                                        requireActivity(), R.raw.style_json));
 
                         if (!success) {
                             Log.e("map", "Style parsing failed.");
@@ -168,7 +168,7 @@ public class NewMarkerFragment extends Fragment {
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             galleryIntent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
             // Start the Intent
-            getActivity().startActivityForResult(galleryIntent, LOAD_PICTURE);
+            requireActivity().startActivityForResult(galleryIntent, LOAD_PICTURE);
         });
 
 

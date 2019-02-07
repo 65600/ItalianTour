@@ -58,7 +58,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        mViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
 
     }
 
@@ -71,8 +71,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         FragmentManager fm = getChildFragmentManager();
         final SupportMapFragment mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
 
-        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-        NavigationView nv = getActivity().findViewById(R.id.nav_view);
+        Toolbar toolbar = requireActivity().findViewById(R.id.toolbar);
+        NavigationView nv = requireActivity().findViewById(R.id.nav_view);
         DrawerLayout drawerContainer = requireActivity().findViewById(R.id.main_container);
         bottomDetails = res.findViewById(R.id.details_panel);
         bsb = BottomSheetBehavior.from(bottomDetails);
@@ -82,7 +82,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             //Set to invisible until the user is authenticated.
             toolbar.setVisibility(View.GONE);
             nv.setVisibility(View.GONE);
-            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.id.action_mapFragment_to_loginFragment);
+            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.action_mapFragment_to_loginFragment);
             drawerContainer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
 
@@ -144,7 +144,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             // in a raw resource file.
             boolean success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
-                            getActivity(), R.raw.style_json));
+                            requireActivity(), R.raw.style_json));
 
             if (!success) {
                 Log.e("map", "Style parsing failed.");
@@ -233,11 +233,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         InterestMarker val;
         if (data != null && (val = data.getValue()) != null){
 
-            TextView details_title = getActivity().findViewById(R.id.details_title);
-            TextView details_desc = getActivity().findViewById(R.id.details_desc);
-            TextView details_orari = getActivity().findViewById(R.id.details_hours);
-            ImageView details_thumb = getActivity().findViewById(R.id.details_thumbnail);
-            Button favButton = getActivity().findViewById(R.id.details_favButton);
+            TextView details_title = requireActivity().findViewById(R.id.details_title);
+            TextView details_desc = requireActivity().findViewById(R.id.details_desc);
+            TextView details_orari = requireActivity().findViewById(R.id.details_hours);
+            ImageView details_thumb = requireActivity().findViewById(R.id.details_thumbnail);
+            Button favButton = requireActivity().findViewById(R.id.details_favButton);
 
             details_title.setText(val.getName());
             details_orari.setText("Aperto " + val.getOrari());

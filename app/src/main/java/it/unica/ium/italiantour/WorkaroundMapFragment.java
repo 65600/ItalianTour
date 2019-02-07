@@ -18,7 +18,7 @@ public class WorkaroundMapFragment extends SupportMapFragment {
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle savedInstance) {
         View layout = super.onCreateView(layoutInflater, viewGroup, savedInstance);
 
-        TouchableWrapper frameLayout = new TouchableWrapper(getActivity());
+        TouchableWrapper frameLayout = new TouchableWrapper(requireActivity());
 
         frameLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 

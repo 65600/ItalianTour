@@ -45,7 +45,7 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
+        mViewModel = ViewModelProviders.of(requireActivity()).get(LoginViewModel.class);
         layout = view.findViewById(R.id.registerPanelLayout);
         AppCompatImageButton imageBackButton = view.findViewById(R.id.image_back_button);
         Button continueButton = view.findViewById(R.id.registerRegistratiButton);

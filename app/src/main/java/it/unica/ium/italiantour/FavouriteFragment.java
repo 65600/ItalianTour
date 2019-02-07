@@ -66,7 +66,7 @@ public class FavouriteFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favourite_list, container, false);
 
-        MainViewModel mvm = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        MainViewModel mvm = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
         mFavourites = mvm.getFavourites();
 
         //Create an adapter for our list once it's loaded

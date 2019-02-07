@@ -41,8 +41,8 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        loginViewModel = ViewModelProviders.of(getActivity()).get(LoginViewModel.class);
-        mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
+        loginViewModel = ViewModelProviders.of(requireActivity()).get(LoginViewModel.class);
+        mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
         Log.i(this.toString(), mainViewModel.toString());
         View layout = view.findViewById(R.id.loginPanelLayout);
         EditText username = view.findViewById(R.id.loginUsernameField);
@@ -55,8 +55,8 @@ public class LoginFragment extends Fragment {
             LoginUser res = loginViewModel.validateCredentials(username.getText().toString(), password.getText().toString());
             if(res != null){
                 mainViewModel.setUser(res);
-                Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-                NavigationView nv = getActivity().findViewById(R.id.nav_view);
+                Toolbar toolbar = requireActivity().findViewById(R.id.toolbar);
+                NavigationView nv = requireActivity().findViewById(R.id.nav_view);
                 DrawerLayout dl = requireActivity().findViewById(R.id.main_container);
                 toolbar.setVisibility(View.VISIBLE);
                 nv.setVisibility(View.VISIBLE);
