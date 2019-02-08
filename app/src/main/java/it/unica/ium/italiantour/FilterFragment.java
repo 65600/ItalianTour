@@ -65,7 +65,12 @@ public class FilterFragment extends Fragment {
         }
 
         closeButton.setOnClickListener(v -> {
-            //tapping outside of any element of the fragment closes it.
+            //tapping the close button closes the fragment.
+            getActivity().getSupportFragmentManager().popBackStackImmediate();
+            filterButton.setVisibility(View.VISIBLE);
+        });
+        view.setOnClickListener(v -> {
+            //tapping outside the window closes the fragment.
             getActivity().getSupportFragmentManager().popBackStackImmediate();
             filterButton.setVisibility(View.VISIBLE);
         });

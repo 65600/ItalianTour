@@ -2,6 +2,7 @@ package it.unica.ium.italiantour;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -13,6 +14,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -200,10 +202,32 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 LatLng m_coords = new LatLng(m.getLat(), m.getLon());
                 //TODO: color code them based on category?
                 Marker marker;
+                float[] hsv = new float[3];
                 switch (m.getCategories()) {
                     case InterestMarker.MONUMENTI:
-                         marker = mMap.addMarker(new MarkerOptions().position(m_coords).title(m.getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                         break;
+                        Color.colorToHSV(ContextCompat.getColor(requireContext(), R.color.colorMonument), hsv);
+                        marker = mMap.addMarker(new MarkerOptions().position(m_coords).title(m.getName()).icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
+                        break;
+                    case InterestMarker.RISTORANTI:
+                        Color.colorToHSV(ContextCompat.getColor(requireContext(), R.color.colorRestaurant), hsv);
+                        marker = mMap.addMarker(new MarkerOptions().position(m_coords).title(m.getName()).icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
+                        break;
+                    case InterestMarker.ARTE:
+                        Color.colorToHSV(ContextCompat.getColor(requireContext(), R.color.colorArt), hsv);
+                        marker = mMap.addMarker(new MarkerOptions().position(m_coords).title(m.getName()).icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
+                        break;
+                    case InterestMarker.SPORT:
+                        Color.colorToHSV(ContextCompat.getColor(requireContext(), R.color.colorSport), hsv);
+                        marker = mMap.addMarker(new MarkerOptions().position(m_coords).title(m.getName()).icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
+                        break;
+                    case InterestMarker.SVAGO:
+                        Color.colorToHSV(ContextCompat.getColor(requireContext(), R.color.colorLeisure), hsv);
+                        marker = mMap.addMarker(new MarkerOptions().position(m_coords).title(m.getName()).icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
+                        break;
+                    case InterestMarker.NATURA:
+                        Color.colorToHSV(ContextCompat.getColor(requireContext(), R.color.colorNature), hsv);
+                        marker = mMap.addMarker(new MarkerOptions().position(m_coords).title(m.getName()).icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
+                        break;
                     default:
                          marker = mMap.addMarker(new MarkerOptions().position(m_coords).title(m.getName()));
                 }
@@ -215,13 +239,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap.setOnMarkerClickListener(m -> {
             InterestMarker data = (InterestMarker) m.getTag();
             if (data != null) {
+                bsb.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 m.showInfoWindow();
                 mViewModel.setSelectedMarker(data.id);
                 mViewModel.getSelectedMarker().observe( this, val -> {
                     Log.d("map", "DEBUG, marker selected: " + val.getName());
                     //mViewModel.insertFavourite(val.id);
                     updateDetailsPanel();
-                    bsb.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    bsb.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
                     mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(val.getLat(), val.getLon())));
                 });
                 return true;
@@ -241,7 +266,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             LiveData<InterestMarker> data = mViewModel.getSelectedMarker();
             InterestMarker val;
             if (data != null && (val = data.getValue()) != null){
-                bsb.setState(BottomSheetBehavior.STATE_EXPANDED);
+                bsb.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(val.getLat(), val.getLon()),14));
             }
         }else{ //Starts map screen zoomed in on your current position.
@@ -257,7 +282,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             if (startingLocation!= null) {
                 LatLng coords = new LatLng(startingLocation.getLatitude(), startingLocation.getLongitude());
                 Marker marker = mMap.addMarker(new MarkerOptions().position(coords).title("Tu sei qui")
-                        .icon(getMarkerIconFromDrawable(getResources().getDrawable(R.drawable.ic_person_pin_circle_black_24dp))));
+                        .icon(getMarkerIconFromDrawable(getResources().getDrawable(R.drawable.ic_person_pin_circle_blue_24dp))));
                 mViewModel.getCurrentLocation().removeObservers(this); //Replace this observer with just a simple marker update
                 mViewModel.getCurrentLocation().observe(this,  newLocation-> {
                     LatLng newc = new LatLng(newLocation.getLatitude(), newLocation.getLongitude());
