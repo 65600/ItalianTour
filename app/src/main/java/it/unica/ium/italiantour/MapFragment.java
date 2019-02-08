@@ -98,6 +98,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             //Check if filter panel is currently on screen
             if(res.findViewById(R.id.filterLayout) == null){
+                //Move info panel a little out of the way
+                if(bsb.getState() == BottomSheetBehavior.STATE_EXPANDED || bsb.getState() == BottomSheetBehavior.STATE_HALF_EXPANDED)
+                bsb.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 //Spawn filter selecting fragment
                 FragmentManager fragmentManager = requireFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -246,7 +249,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     Log.d("map", "DEBUG, marker selected: " + val.getName());
                     //mViewModel.insertFavourite(val.id);
                     updateDetailsPanel();
-                    bsb.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
+                    bsb.setState(BottomSheetBehavior.STATE_EXPANDED);
                     mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(val.getLat(), val.getLon())));
                 });
                 return true;
@@ -266,7 +269,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             LiveData<InterestMarker> data = mViewModel.getSelectedMarker();
             InterestMarker val;
             if (data != null && (val = data.getValue()) != null){
-                bsb.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
+                bsb.setState(BottomSheetBehavior.STATE_EXPANDED);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(val.getLat(), val.getLon()),14));
             }
         }else{ //Starts map screen zoomed in on your current position.
