@@ -75,7 +75,11 @@ public class MainViewModel extends AndroidViewModel {
 
     public void setUser(LoginUser user) {
         this.user = user;
-        this.favourites = appRepo.getFavourites(user.getUsername());
+        if(null != user) {
+            this.favourites = appRepo.getFavourites(user.getUsername());
+        }else{
+            this.favourites = null;
+        }
     }
 
     public LiveData<Location> getCurrentLocation() {

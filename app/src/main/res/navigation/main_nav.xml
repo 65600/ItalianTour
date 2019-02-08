@@ -90,4 +90,12 @@
     </fragment>
     <action android:id="@+id/action_global_mapFragment"
         app:destination="@id/mapFragment"/>
+    <fragment
+        android:id="@+id/logoutFragment"
+        android:name="it.unica.ium.italiantour.LogoutFragment"
+        android:label="LogoutFragment" >
+        <action
+            android:id="@+id/action_logoutFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
 </navigation>

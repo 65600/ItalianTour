@@ -216,6 +216,23 @@ public class NewMarkerFragment extends Fragment implements AdapterView.OnItemSel
                 marker = mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Selezione"));
             }
         }
+        marker.setDraggable(true);
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                nmvm.setMarkerPos(marker.getPosition());
+            }
+        });
         return marker;
     }
 
