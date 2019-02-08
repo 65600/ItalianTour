@@ -69,6 +69,11 @@ public class FilterFragment extends Fragment {
             getActivity().getSupportFragmentManager().popBackStackImmediate();
             filterButton.setVisibility(View.VISIBLE);
         });
+        view.setOnClickListener(v -> {
+            //tapping outside the window closes the fragment.
+            getActivity().getSupportFragmentManager().popBackStackImmediate();
+            filterButton.setVisibility(View.VISIBLE);
+        });
 
         return view;
     }
