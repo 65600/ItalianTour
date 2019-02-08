@@ -5,6 +5,7 @@ apply plugin: 'androidx.navigation.safeargs'
 android {
     compileSdkVersion 28
     defaultConfig {
+        vectorDrawables.useSupportLibrary = true
         applicationId "it.unica.ium.italiantour"
         minSdkVersion 15
         targetSdkVersion 28

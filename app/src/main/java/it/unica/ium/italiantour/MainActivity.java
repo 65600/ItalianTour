@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity implements FavouriteFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         mDrawerLayout = findViewById(R.id.main_container);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
