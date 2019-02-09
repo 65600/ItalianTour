@@ -312,19 +312,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             details_desc.setText(val.getDesc());
             loadPictureFromUri(details_thumb, val.getPhotoUriParsed(), getContext());
             //Contextually change favourites button
-            mViewModel.getFavourites().observe(this, interestMarkers -> {
-                if(containsID(interestMarkers, val.getId())){
-                    buttonLayoutRemove(favButton);
-                    favButton.setOnClickListener(view -> {
-                        mViewModel.removeFavourite(val.getId());
-                    });
-                }else{
-                    buttonLayoutAdd(favButton);
-                    favButton.setOnClickListener(view -> {
-                        mViewModel.insertFavourite(val.getId());
-                    });
-                }
-            });
+            if(mViewModel.getUser() != null) {
+                mViewModel.getFavourites().observe(this, interestMarkers -> {
+                    if (containsID(interestMarkers, val.getId())) {
+                        buttonLayoutRemove(favButton);
+                        favButton.setOnClickListener(view -> {
+                            mViewModel.removeFavourite(val.getId());
+                        });
+                    } else {
+                        buttonLayoutAdd(favButton);
+                        favButton.setOnClickListener(view -> {
+                            mViewModel.insertFavourite(val.getId());
+                        });
+                    }
+                });
+            }
             navButton.setOnClickListener(view -> {
                 Uri gmmIntentUri = Uri.parse("google.navigation:q="+val.getLat()+","+val.getLon());
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
