@@ -5,23 +5,26 @@
     android:id="@+id/details_panel"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/colorPrimary"
     app:behavior_hideable="true"
     app:behavior_peekHeight="120dp"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        >
+    <ImageView
+        android:id="@+id/cardBG"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="4dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/common_google_signin_btn_text_light_normal_background" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/details_card"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:background="?attr/colorBackgroundFloating"
         android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -107,12 +110,10 @@
         android:paddingRight="8dp"
         android:paddingBottom="16dp"
         android:text="Descrizione"
-        android:background="?attr/colorBackgroundFloating"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/details_card" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
