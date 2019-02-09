@@ -14,6 +14,7 @@ public class LogoutFragment extends Fragment {
         MainViewModel mvm = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
         //Set user to null and go back to the map menu, where the user will be redirected to the login page.
         mvm.setUser(null);
+        mvm.setSelectedMarker(null);
         Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.action_logoutFragment_to_mapFragment);
     }
 }

@@ -78,21 +78,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         FragmentManager fm = getChildFragmentManager();
         final SupportMapFragment mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
 
-        Toolbar toolbar = requireActivity().findViewById(R.id.toolbar);
-        NavigationView nv = requireActivity().findViewById(R.id.nav_view);
-        DrawerLayout drawerContainer = requireActivity().findViewById(R.id.main_container);
         bottomDetails = res.findViewById(R.id.details_panel);
         Button filterButton = res.findViewById(R.id.filter_button);
         bsb = BottomSheetBehavior.from(bottomDetails);
 
-        //If the user hasn't authenticated itself yet, we move him into the login tab.
-        if(mViewModel.getUser() == null){
-            //Set to invisible until the user is authenticated.
-            toolbar.setVisibility(View.GONE);
-            nv.setVisibility(View.GONE);
-            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.action_mapFragment_to_loginFragment);
-            drawerContainer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }
+
 
         filterButton.setOnClickListener(v -> {
 
@@ -156,6 +146,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
         bsb.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+
+        Toolbar toolbar = requireActivity().findViewById(R.id.toolbar);
+        NavigationView nv = requireActivity().findViewById(R.id.nav_view);
+        DrawerLayout drawerContainer = requireActivity().findViewById(R.id.main_container);
+
+        //If the user hasn't authenticated itself yet, we move him into the login tab.
+        if(mViewModel.getUser() == null){
+            //Set to invisible until the user is authenticated.
+            toolbar.setVisibility(View.GONE);
+            nv.setVisibility(View.GONE);
+            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(R.id.action_mapFragment_to_loginFragment);
+            drawerContainer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
 
         updateDetailsPanel();
     }
@@ -307,12 +311,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Button favButton = requireActivity().findViewById(R.id.details_favButton);
             Button navButton = requireActivity().findViewById(R.id.details_nav);
 
-            details_title.setText(val.getName());
-            details_orari.setText("Aperto " + val.getOrari());
-            details_desc.setText(val.getDesc());
-            loadPictureFromUri(details_thumb, val.getPhotoUriParsed(), getContext());
-            //Contextually change favourites button
             if(mViewModel.getUser() != null) {
+                details_title.setText(val.getName());
+                details_orari.setText("Aperto " + val.getOrari());
+                details_desc.setText(val.getDesc());
+                loadPictureFromUri(details_thumb, val.getPhotoUriParsed(), getContext());
+                //Contextually change favourites button
                 mViewModel.getFavourites().observe(this, interestMarkers -> {
                     if (containsID(interestMarkers, val.getId())) {
                         buttonLayoutRemove(favButton);
@@ -326,13 +330,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         });
                     }
                 });
+                navButton.setOnClickListener(view -> {
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q="+val.getLat()+","+val.getLon());
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    startActivity(mapIntent);
+                });
             }
-            navButton.setOnClickListener(view -> {
-                Uri gmmIntentUri = Uri.parse("google.navigation:q="+val.getLat()+","+val.getLon());
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                mapIntent.setPackage("com.google.android.apps.maps");
-                startActivity(mapIntent);
-            });
 
         }
     }

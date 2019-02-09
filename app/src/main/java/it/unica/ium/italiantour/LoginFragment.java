@@ -4,6 +4,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -61,6 +63,9 @@ public class LoginFragment extends Fragment {
                 toolbar.setVisibility(View.VISIBLE);
                 nv.setVisibility(View.VISIBLE);
                 dl.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                //Hide keyboard on load.
+                InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mapFragment);
             }else{
                 Snackbar.make(layout, "Errore di accesso. Verificare nome utente e password.", Snackbar.LENGTH_LONG).show();
