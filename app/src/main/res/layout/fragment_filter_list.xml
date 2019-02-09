@@ -42,6 +42,7 @@
             android:layout_marginRight="2dp"
             android:layout_marginBottom="2dp"
             android:paddingBottom="72dp"
+            android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="@+id/filter_closeButton"
             app:layout_constraintEnd_toEndOf="parent"
