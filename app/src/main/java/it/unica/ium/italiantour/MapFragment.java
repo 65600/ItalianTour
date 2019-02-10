@@ -98,9 +98,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 //Custom fragment animation on start and end fragment
                 fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_right);
 
+                //Do not add to backstack! Back button and top indicator actions need to be consistent.
                 Fragment filterFragment = new FilterFragment();
                 fragmentTransaction.add(R.id.coordinator, filterFragment);
-                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 filterButton.setVisibility(View.GONE);
             }
@@ -374,6 +374,4 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         b.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp), null, null, null);
         b.setText("Aggiungi");
     }
-
-
 }
