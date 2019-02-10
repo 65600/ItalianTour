@@ -39,6 +39,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.FileInputStream;
 
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+
 
 public class MainActivity extends AppCompatActivity implements FavouriteFragment.OnListFragmentInteractionListener, FilterFragment.OnListFragmentInteractionListener{
 
@@ -119,6 +121,11 @@ public class MainActivity extends AppCompatActivity implements FavouriteFragment
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.d("PERMISSION_SPECIFIC_STORAGE", "approved");
+                    // Create intent to Open Image applications like Gallery, Google Photos
+                    Intent galleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    galleryIntent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivityForResult(galleryIntent, LOAD_PICTURE);
                 } else {
                     Log.d("PERMISSION_SPECIFIC_STORAGE", "denied");
                     View nmLayout = findViewById(R.id.newMarker_layout);
