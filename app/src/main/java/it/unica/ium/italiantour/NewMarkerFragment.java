@@ -1,6 +1,8 @@
 package it.unica.ium.italiantour;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
 import android.net.Uri;
@@ -8,6 +10,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
@@ -182,6 +186,11 @@ public class NewMarkerFragment extends Fragment implements AdapterView.OnItemSel
                 if(nmvm.getDesc().length() <= 0){
                     desc.setError("Campo vuoto");
                 }
+                if( nmvm.getImageUri() == null || nmvm.getImageUri().getValue() == null){
+                    TextView tv= requireActivity().findViewById(R.id.newMarker_fotoText);
+                    tv.requestFocus();
+                    tv.setError("Foto del luogo obbligatoria");
+                }
                 Snackbar.make(layout, "Errore di inserimento: uno o più campi risultano vuoti.", Snackbar.LENGTH_LONG).show();
             }
         });
@@ -193,7 +202,14 @@ public class NewMarkerFragment extends Fragment implements AdapterView.OnItemSel
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             galleryIntent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
             // Start the Intent
-            requireActivity().startActivityForResult(galleryIntent, LOAD_PICTURE);
+
+            if( ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(requireActivity(),
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},2);
+            }else{ //If given storage permission, start image picking intent.
+                requireActivity().startActivityForResult(galleryIntent, LOAD_PICTURE);
+            }
+
         });
 
 

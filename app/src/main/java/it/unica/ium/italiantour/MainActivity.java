@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -102,26 +103,41 @@ public class MainActivity extends AppCompatActivity implements FavouriteFragment
             case 1: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                     Log.d("PERMISSION", "approved");
                     mViewModel =  ViewModelProviders.of(this).get(MainViewModel.class);
                     mViewModel.restartTracker();
                 } else {
                     Log.d("PERMISSION", "denied");
+                    //closeNow();
                 }
+                break;
             }
             case 2: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("PERMISSION", "approved");
+                    Log.d("PERMISSION_SPECIFIC_STORAGE", "approved");
                 } else {
-                    Log.d("PERMISSION", "denied");
+                    Log.d("PERMISSION_SPECIFIC_STORAGE", "denied");
+                    View nmLayout = findViewById(R.id.newMarker_layout);
+                    if(nmLayout != null) {
+                        Snackbar.make(nmLayout, "Accesso allo spazio di archiviazione necessario per inserire un nuovo luogo.", Snackbar.LENGTH_LONG).show();
+                    }
+                    //closeNow();
                 }
+                break;
             }
+        }
+    }
 
-            // other 'case' lines to check for other
-            // permissions this app might request.
+
+    private void closeNow() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            finishAffinity();
+        } else {
+            finish();
         }
     }
 

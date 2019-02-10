@@ -45,6 +45,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -276,10 +277,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 bsb.setState(BottomSheetBehavior.STATE_EXPANDED);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(val.getLat(), val.getLon()),14));
             }
-        }else{ //Starts map screen zoomed in on your current position.
+        }else { //Starts map screen zoomed in on your current position, if available (eg. given location permission).
             addFollowingMarker();
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mViewModel.getCurrentLocation().getValue().getLatitude(),
-                    mViewModel.getCurrentLocation().getValue().getLongitude()) , 14));
+            if (mViewModel.getCurrentLocation().getValue() != null){
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mViewModel.getCurrentLocation().getValue().getLatitude(),
+                        mViewModel.getCurrentLocation().getValue().getLongitude()), 14));
+            }
+            else{
+                Snackbar.make(requireActivity().findViewById(R.id.filter_container), "Errore nella verifica della posizione GPS. Funzionalità app limitate.", Snackbar.LENGTH_LONG).show();
+            }
         }
 
     }
