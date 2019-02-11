@@ -1,7 +1,10 @@
 package it.unica.ium.italiantour;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,14 +12,21 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+//Commit Test Andres
 public class LoginFragment extends Fragment {
 
-    private LoginViewModel mViewModel;
+    private LoginViewModel loginViewModel;
+    private MainViewModel mainViewModel;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -31,17 +41,37 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
-        // TODO: Use the ViewModel
-        Button login = getActivity().findViewById(R.id.loginAccediButton);
-        Button register = getActivity().findViewById(R.id.loginRegistratiButton);
+        loginViewModel = ViewModelProviders.of(requireActivity()).get(LoginViewModel.class);
+        mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel.class);
+        Log.i(this.toString(), mainViewModel.toString());
+        View layout = view.findViewById(R.id.loginPanelLayout);
+        EditText username = view.findViewById(R.id.loginUsernameField);
+        EditText password = view.findViewById(R.id.loginPasswordField);
+        Button login = view.findViewById(R.id.loginAccediButton);
+        Button register = view.findViewById(R.id.loginRegistratiButton);
 
 
         login.setOnClickListener(v -> {
-            //todo: actual login check
-            Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mainMapActivity);
+            LoginUser res = loginViewModel.validateCredentials(username.getText().toString(), password.getText().toString());
+            if(res != null){
+                mainViewModel.setUser(res);
+                Toolbar toolbar = requireActivity().findViewById(R.id.toolbar);
+                NavigationView nv = requireActivity().findViewById(R.id.nav_view);
+                DrawerLayout dl = requireActivity().findViewById(R.id.main_container);
+                toolbar.setVisibility(View.VISIBLE);
+                nv.setVisibility(View.VISIBLE);
+                dl.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                //Hide keyboard on load.
+                InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_mapFragment);
+            }else{
+                Snackbar.make(layout, "Errore di accesso. Verificare nome utente e password.", Snackbar.LENGTH_LONG).show();
+                username.setError("Verificare nome utente");
+                password.setError("Verificare password");
+            }
         });
 
         register.setOnClickListener(v -> {

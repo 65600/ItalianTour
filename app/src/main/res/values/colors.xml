@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#6a8bff</color>
+    <color name="colorPrimaryDark">#657A84</color>
+    <color name="colorPrimary">#809DAB</color>
+    <color name="colorWhite">#D0D0D0</color>
+
+    <color name="colorMonument">#9c27b0</color>
+    <color name="colorRestaurant">#3f51b5</color>
+    <color name="colorArt">#03a9f4</color>
+    <color name="colorSport">#8bc34a</color>
+    <color name="colorLeisure">#ffeb3b</color>
+    <color name="colorNature">#ff6e40</color>
 </resources>

@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">Italian Tour</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_main_map">Map</string>
+    <string-array name="categories">
+        <item>Monumenti</item>
+        <item>Ristoranti</item>
+        <item>Arte</item>
+        <item>Sport</item>
+        <item>Svago</item>
+        <item>Natura</item>
+    </string-array>
 </resources>
