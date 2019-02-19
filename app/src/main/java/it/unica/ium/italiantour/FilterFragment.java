@@ -50,7 +50,6 @@ public class FilterFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_filter_list, container, false);
         RecyclerView recyclerList = view.findViewById(R.id.recycler_list_view);
-        Button filterButton = requireActivity().findViewById(R.id.filter_button);
         Button closeButton = view.findViewById(R.id.filter_closeButton);
 
         // Set the adapter
@@ -67,12 +66,10 @@ public class FilterFragment extends Fragment {
         closeButton.setOnClickListener(v -> {
             //tapping the close button closes the fragment.
             requireActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_right).remove(this).commit();
-            filterButton.setVisibility(View.VISIBLE);
         });
         view.setOnClickListener(v -> {
             //tapping outside the window closes the fragment.
             requireActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_right).remove(this).commit();
-            filterButton.setVisibility(View.VISIBLE);
         });
 
         return view;
@@ -109,4 +106,5 @@ public class FilterFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(Filtri.Filtro item);
     }
+
 }

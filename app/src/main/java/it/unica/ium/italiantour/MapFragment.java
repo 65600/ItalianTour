@@ -102,7 +102,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Fragment filterFragment = new FilterFragment();
                 fragmentTransaction.add(R.id.coordinator, filterFragment);
                 fragmentTransaction.commit();
-                filterButton.setVisibility(View.GONE);
             }
         });
 
